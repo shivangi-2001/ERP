@@ -1,0 +1,272 @@
+[
+  {
+    "id": 1,
+    "client_id": 1,
+    "assessment_type": {
+      "Web": {
+        "testing_urls": [
+          {
+            "urls": "https://web.techinnovations.com/login",
+            "assigned_to": 1
+          },
+          {
+            "urls": "https://portal.techinnovations.com/dashboard",
+            "assigned_to": 1
+          },
+          {
+            "urls": "https://test.techinnovations.io",
+            "assigned_to": 2
+          },
+          {
+            "urls": "https://techinnovations.com/admin",
+            "assigned_to": 2
+          }
+        ]
+      },
+      "Mobile": {
+        "testing_urls": [
+          {
+            "urls": "https://mobile.techinnovations.com/app",
+            "assigned_to": 2
+          },
+          {
+            "urls": "https://api.techinnovations.com/v1",
+            "assigned_to": 2
+          },
+          {
+            "urls": "https://mobile.testing.techinnovations.com",
+            "assigned_to": 1
+          },
+          {
+            "urls": "https://play.techinnovations.io/download",
+            "assigned_to": 1
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 2,
+    "client_id": 2,
+    "assessment_type": {
+      "Web": {
+        "testing_urls": [
+          {
+            "urls": "https://web.googleinnovations.com",
+            "assigned_to": 3
+          },
+          {
+            "urls": "https://login.googleinnovations.io",
+            "assigned_to": 4
+          },
+          {
+            "urls": "https://portal.google.io",
+            "assigned_to": 3
+          },
+          {
+            "urls": "https://app.googleinnovations.com",
+            "assigned_to": 4
+          }
+        ]
+      },
+      "Thick Client": {
+        "testing_urls": [
+          {
+            "urls": "https://downloads.googleinnovations.com/desktop-app.exe",
+            "assigned_to": 3
+          },
+          {
+            "urls": "https://client.googleapps.org",
+            "assigned_to": 3
+          },
+          {
+            "urls": "https://intranet.googlecorp.io",
+            "assigned_to": 4
+          },
+          {
+            "urls": "https://support.googleinnovations.com",
+            "assigned_to": 4
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 3,
+    "client_id": 3,
+    "assessment_type": {
+      "Mobile": {
+        "testing_urls": [
+          {
+            "urls": "https://mobile.cybercorelabs.co.uk",
+            "assigned_to": 5
+          },
+          {
+            "urls": "https://app.cybercorelabs.io/api",
+            "assigned_to": 5
+          },
+          {
+            "urls": "https://mobile.cybercorelabs.io/install",
+            "assigned_to": 5
+          },
+          {
+            "urls": "https://cybercorelabs.io/download",
+            "assigned_to": 5
+          }
+        ]
+      },
+      "Thick Client": {
+        "testing_urls": [
+          {
+            "urls": "https://tools.cybercorelabs.io/client.exe",
+            "assigned_to": 5
+          },
+          {
+            "urls": "https://intranet.cybercorelabs.net",
+            "assigned_to": 5
+          },
+          {
+            "urls": "https://admin.cybercorelabs.io",
+            "assigned_to": 5
+          },
+          {
+            "urls": "https://vpn.cybercorelabs.io",
+            "assigned_to": 5
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 4,
+    "client_id": 5,
+    "assessment_type": {
+      "Web": {
+        "testing_urls": [
+          {
+            "urls": "https://web.netsecure.net",
+            "assigned_to": 7
+          },
+          {
+            "urls": "https://portal.netsecure.net/login",
+            "assigned_to": 6
+          },
+          {
+            "urls": "https://dashboard.netsecure.ca",
+            "assigned_to": 6
+          },
+          {
+            "urls": "https://testenv.netsecure.io",
+            "assigned_to": 6
+          }
+        ]
+      },
+      "Thick Client": {
+        "testing_urls": [
+          {
+            "urls": "https://downloads.netsecure.net/desktop-client.exe",
+            "assigned_to": 7
+          },
+          {
+            "urls": "https://tools.netsecure.net",
+            "assigned_to": 7
+          },
+          {
+            "urls": "https://vpnaccess.netsecure.net",
+            "assigned_to": 7
+          },
+          {
+            "urls": "https://netsecure-admin.net",
+            "assigned_to": 8
+          }
+        ]
+      },
+      "Network": {
+        "testing_urls": [
+          {
+            "urls": "https://net-analyzer.netsecure.net",
+            "assigned_to": 8
+          },
+          {
+            "urls": "https://monitoring.netsecure.net",
+            "assigned_to": 8
+          },
+          {
+            "urls": "https://firewall-config.netsecure.io",
+            "assigned_to": 8
+          },
+          {
+            "urls": "https://network-diagnostics.netsecure.net",
+            "assigned_to": 6
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 5,
+    "client_id": 4,
+    "assessment_type": {
+      "Web": {
+        "testing_urls": [
+          {
+            "urls": "https://web.redtrace.com",
+            "assigned_to": 10
+          },
+          {
+            "urls": "https://dashboard.redtrace.io",
+            "assigned_to": 10
+          },
+          {
+            "urls": "https://login.redtrace.com",
+            "assigned_to": 10
+          },
+          {
+            "urls": "https://admin.redtrace.net",
+            "assigned_to": 10
+          }
+        ]
+      },
+      "Mobile": {
+        "testing_urls": [
+          {
+            "urls": "https://mobile.redtrace.io",
+            "assigned_to": 9
+          },
+          {
+            "urls": "https://api.redtrace.com/v2",
+            "assigned_to": 9
+          },
+          {
+            "urls": "https://appstore.redtrace.net",
+            "assigned_to": 9
+          },
+          {
+            "urls": "https://download.redtrace.io",
+            "assigned_to":10
+          }
+        ]
+      },
+      "Thick Client": {
+        "testing_urls": [
+          {
+            "urls": "https://client.redtrace.org/setup.exe",
+            "assigned_to": 9
+          },
+          {
+            "urls": "https://intranet.redtrace.com",
+            "assigned_to": 9
+          },
+          {
+            "urls": "https://vpn.redtrace.net",
+            "assigned_to": 9
+          },
+          {
+            "urls": "https://desktop.redtrace.com",
+            "assigned_to": 9
+          }
+        ]
+      }
+    }
+  }
+]
