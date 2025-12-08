@@ -45,7 +45,7 @@ const Card: React.FC<CardProps> = ({
   }, []);
   return (
     <div
-      className={`rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] ${className}`}
+      className={`h-fit rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] ${className}`}
     >
       {/* Card Header */}
       <div className="flex align-middle justify-between px-6 py-5">

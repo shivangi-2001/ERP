@@ -10,16 +10,13 @@ import { myTeamApi } from '../service/myTeam'
 
 export const store = configureStore({
   reducer: {
+    assessment: assestReducer,
     myTeam: myTeamReducer,
     project: projectReducer,
-    assessment: assestReducer,
-    
     auth: authReducer,
-    
     [projectApi.reducerPath]: projectApi.reducer,
     [assessmentApi.reducerPath]: assessmentApi.reducer,
     [myTeamApi.reducerPath]: myTeamApi.reducer,
-    
     [authApi.reducerPath]: authApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>

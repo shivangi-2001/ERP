@@ -218,34 +218,34 @@ const UpdateEmployee = () => {
             />
           </div>
 
-          {/* Team */}
-          <div>
-            <Label htmlFor="team_id">Team</Label>
-            <Select
-              key={formData.team_id || "team_select"}
-              onChange={handleSelect}
-              options={team_groups}
-              placeholder="Select Team"
-              defaultValue={formData.team_id?.toString() || ""}
-              disabled={!isEditing}
-            />
-          </div>
+          <div className="flex flex-row justify-between items-end gap-4">
+            <div className="w-1/3 pb-3">
+              {/* pb-3 adds a little spacing so the checkbox aligns perfectly with the text inside the input, not just the bottom border */}
+              <Checkbox
+                id="is_active"
+                label="Account active"
+                checked={formData.is_active ?? true}
+                onChange={(checked) =>
+                  setFormData((prev: any) => ({ ...prev, is_active: checked }))
+                }
+              />
+            </div>
 
-          {/* Active checkbox */}
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="is_active"
-              checked={formData.is_active ?? true}
-              onChange={(checked) =>
-                setFormData((prev: any) => ({ ...prev, is_active: checked }))
-              }
-            />
-            <Label htmlFor="is_active">Account Active</Label>
+            <div className="w-2/3">
+              <Label htmlFor="team_id">Team</Label>
+              <Select
+                defaultValue={formData.team_id?.toString() || ""}
+                onChange={handleSelect}
+                options={team_groups}
+                placeholder="Select Team"
+                disabled={!isEditing}
+              />
+            </div>
           </div>
         </div>
 
         {/* Submit */}
-        <div className="flex flex-row-reverse mt-10 border-t py-3">
+        <div className="flex flex-row-reverse mt-10 py-3">
           <Button
             variant="primary"
             disabled={isLoading}

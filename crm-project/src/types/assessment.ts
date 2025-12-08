@@ -25,6 +25,11 @@ export interface AssessmentType {
 export interface Vulnerability {
     id: number;
     name: string;
+    description?: string;
+    impact?: string;
+    remediations?: string;
+    reference?: string;
+    cvss?: string;
     category_of_testing: Assessment
     category_of_testing_id?: number;
 }

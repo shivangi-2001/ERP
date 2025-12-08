@@ -4,6 +4,7 @@ import {
   ClientAddress,
   ClientDetail,
   ClientTeam,
+  ClientAssessment,
 } from "../types/project";
 
 interface ProjectState {
@@ -17,6 +18,8 @@ interface ProjectState {
   currentpage: number;
   isEditing: boolean;
   isEditingTeam: boolean;
+  
+  client_assesment_type: ClientAssessment | undefined;
 }
 
 const initialState: ProjectState = {
@@ -32,7 +35,8 @@ const initialState: ProjectState = {
   rowperpage: 5,
   currentpage: 1,
   isEditing: false,
-  isEditingTeam: false
+  isEditingTeam: false,
+  client_assesment_type: undefined,
 };
 
 const projectSlice = createSlice({
@@ -56,6 +60,9 @@ const projectSlice = createSlice({
       state.clientteam = action.payload;
     },
 
+    setClientAssessmentTypeId: (state, action: PayloadAction<ClientAssessment>) => {
+      state.client_assesment_type = action.payload;
+    },
     setRowsPerPage: (state, action: PayloadAction<number>) => {
       state.rowperpage = action.payload;
     },
@@ -78,6 +85,7 @@ export const {
   setClientDetail,
   setClientDetails,
   setClientTeam,
+  setClientAssessmentTypeId,
   setRowsPerPage,
   setCurrentPage,
   toggleEditing,

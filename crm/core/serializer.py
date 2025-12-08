@@ -16,9 +16,11 @@ class AssessmentSerializer(ModelSerializer):
 class VulnerabilitySerializer(ModelSerializer):
     category_of_testing = AssessmentSerializer(read_only=True)
     category_of_testing_id = serializers.PrimaryKeyRelatedField(source="category_of_testing", queryset=AssessmentType.objects.all(), write_only=True)
+    
     class Meta:
         model = Vulnerabilities
-        fields = ['id', 'name', 'category_of_testing_id', 'category_of_testing']
+        fields = ['id', 'name', 'description', 'remediations', 'impact', 'reference', 'cvss','category_of_testing_id', 'category_of_testing']
+        
     
 class TeamsManagementSerializer(ModelSerializer):
     class Meta:

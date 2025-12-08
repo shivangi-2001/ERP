@@ -18,11 +18,19 @@ class AssessmentType(models.Model):
 
 class Vulnerabilities(models.Model):
     name = models.CharField(max_length=255, unique=True)
+    description = models.TextField()
+    remediations = models.TextField()
+    impact = models.TextField()
+    reference=models.URLField()
+    cvss=models.CharField(max_length=200, null=True, blank=True)
     category_of_testing = models.ForeignKey(AssessmentType, on_delete=models.DO_NOTHING, related_name="vulnerabilities")
     
     class Meta:
         verbose_name = "Vulnerability"
         db_table_comment = "Vulnerabilities list"
+        
+    def __str__(self):
+        return self.name
         
 
 class TeamsManagement(models.Model):

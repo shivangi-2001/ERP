@@ -14,13 +14,15 @@ import Alert from "../../components/ui/alert/Alert";
 
 const AddEmployee = () => {
   const [showPassword, setShowPassword] = useState(false);
-  
-  const [statusMessage, setStatusMessage] = useState<{ type: "success" | "error"; text: string; } | null>(null);
-  const [errors, setErrors] = useState<any>({});
-
   const { team_groups } = useSelector((state: RootState) => state.myTeam);
-  
   const [addEmployee, { isLoading }] = useAddEmployeeMutation();
+
+  const [statusMessage, setStatusMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
+  
+  const [fieldErrors, setFieldErrors] = useState<Record<string, any>>({});
 
   const [formData, setFormData] = useState({
     email: "",
@@ -33,8 +35,6 @@ const AddEmployee = () => {
     is_active: true,
   });
 
-  const [error, setError] = useState<Record<string, string>>({});
-
   const resetForm = () => {
     setFormData({
       email: "",
@@ -46,7 +46,8 @@ const AddEmployee = () => {
       team_id: undefined,
       is_active: true,
     });
-    setError({});
+    setFieldErrors({});
+    setTimeout(() => setStatusMessage(null), 3000);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,8 +56,11 @@ const AddEmployee = () => {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
-    if (error[name])
-      setError((prev: any) => ({ ...prev, [name]: undefined }));
+    
+    // Clear specific field error when user types
+    if (fieldErrors[name]) {
+      setFieldErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
   };
 
   const handleSelect = (value: string) => {
@@ -64,11 +68,19 @@ const AddEmployee = () => {
       ...prev,
       team_id: value ? Number(value) : undefined,
     }));
+    
+    // Clear error for team_id
+    if (fieldErrors.team_id) {
+        setFieldErrors((prev) => ({ ...prev, team_id: undefined }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatusMessage(null);
+    setFieldErrors({});
+
+    // Basic Client-side Validation
     if (
       !formData.email ||
       !formData.password ||
@@ -76,27 +88,52 @@ const AddEmployee = () => {
       !formData.last_name ||
       !formData.team_id
     ) {
-      alert("⚠️ Please fill in all required fields including Team.");
+      setStatusMessage({ 
+        type: "error", 
+        text: "Please fill in all required fields marked with *." 
+      });
       return;
     }
 
     try {
       await addEmployee(formData).unwrap();
+      
       setStatusMessage({
         type: "success",
-        text: "Employee Added successfully!",
+        text: "Employee added successfully!",
       });
       resetForm();
+
     } catch (error: any) {
-      const errorMsg = error.data?.detail || "Failed to added employee detail.";
-      setStatusMessage({ type: "error", text: errorMsg });
-      setError(error?.data || {});
+      if (error.data) {
+        setFieldErrors(error.data); 
+        const detailMsg = error.data.detail || "Failed to add employee. Please fix the highlighted errors.";
+        setStatusMessage({ type: "error", text: detailMsg });
+      } else {
+        setStatusMessage({ type: "error", text: "Network error. Please try again." });
+      }
     }
   };
 
+  // Helper to render error text (handles string or array from Django)
+  const renderError = (fieldName: string) => {
+    const err = fieldErrors[fieldName];
+    if (!err) return null;
+    return <p className="text-error-500 text-sm mt-1">{Array.isArray(err) ? err[0] : err}</p>;
+  };
+
   return (
-    <ComponentCard title="create employee account">
-      {statusMessage && ( <Alert variant={statusMessage.type} title="" message={statusMessage.text} /> )}
+    <ComponentCard title="Create Employee Account" desc="Add new tester in your company" >
+      {/* Alert Banner */}
+      {statusMessage && (
+        <div className="mb-6">
+            <Alert 
+                variant={statusMessage.type} 
+                title={statusMessage.type === "success" ? "Success" : "Error"} 
+                message={statusMessage.text} 
+            />
+        </div>
+      )}
       
       <Form onSubmit={handleSubmit}>
         <div className="space-y-6">
@@ -112,11 +149,10 @@ const AddEmployee = () => {
               placeholder="employee@company.com"
               value={formData.email}
               onChange={handleChange}
-              error={!!errors.name}
-              hint={errors.name}
+              error={!!fieldErrors.email}
               required
             />
-            {error.email && <p className="text-error-500 text-sm">{error.email}</p>}
+            {renderError("email")}
           </div>
 
           {/* Password */}
@@ -132,6 +168,7 @@ const AddEmployee = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
+                error={!!fieldErrors.password}
               />
               <span
                 onClick={() => setShowPassword(!showPassword)}
@@ -144,7 +181,7 @@ const AddEmployee = () => {
                 )}
               </span>
             </div>
-            {error.password && <p className="text-error-500 text-sm">{error.password}</p>}
+            {renderError("password")}
           </div>
 
           {/* First + Last Name */}
@@ -160,10 +197,9 @@ const AddEmployee = () => {
                 value={formData.first_name}
                 onChange={handleChange}
                 required
+                error={!!fieldErrors.first_name}
               />
-              {error.first_name && (
-                <p className="text-error-500 text-sm">{error.first_name}</p>
-              )}
+              {renderError("first_name")}
             </div>
             <div className="w-1/2">
               <Label htmlFor="last_name">
@@ -176,10 +212,9 @@ const AddEmployee = () => {
                 value={formData.last_name}
                 onChange={handleChange}
                 required
+                error={!!fieldErrors.last_name}
               />
-              {error.last_name && (
-                <p className="text-error-500 text-sm">{error.last_name}</p>
-              )}
+              {renderError("last_name")}
             </div>
           </div>
 
@@ -192,10 +227,9 @@ const AddEmployee = () => {
               placeholder="+91 9876543210"
               value={formData.contact_number}
               onChange={handleChange}
+              error={!!fieldErrors.contact_number}
             />
-            {error.contact_number && (
-              <p className="text-error-500 text-sm">{error.contact_number}</p>
-            )}
+            {renderError("contact_number")}
           </div>
 
           {/* Designation */}
@@ -207,18 +241,27 @@ const AddEmployee = () => {
               placeholder="Software Engineer"
               value={formData.designation}
               onChange={handleChange}
+              error={!!fieldErrors.designation}
             />
-            {error.designation && (
-              <p className="text-error-500 text-sm">{error.designation}</p>
-            )}
+            {renderError("designation")}
           </div>
 
-          {/* Team Select */}
-          <div>
-            <Label htmlFor="team_id">
-              Team (Group) <span className="text-error-500">*</span>
-            </Label>
-            <Select
+          <div className="flex flex-row justify-between items-end gap-4">
+            <div className="w-1/3 pb-3">
+              {/* pb-3 adds a little spacing so the checkbox aligns perfectly with the text inside the input, not just the bottom border */}
+              <Checkbox
+                id="is_active"
+                label="Account active"
+                checked={formData.is_active ?? true}
+                onChange={(checked) =>
+                  setFormData((prev) => ({ ...prev, is_active: checked }))
+                }
+              />
+            </div>
+
+            <div className="w-2/3">
+              <Label htmlFor="team_id">Team</Label>
+              <Select
               disabled={false}
               key={formData.team_id || "team_select"}
               onChange={handleSelect}
@@ -231,26 +274,14 @@ const AddEmployee = () => {
               placeholder="Select Team"
               defaultValue={formData.team_id?.toString() || ""}
             />
-            {error.team_id && (
-              <p className="text-error-500 text-sm">{error.team_id}</p>
-            )}
+            </div>
           </div>
 
-          {/* Active checkbox */}
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="is_active"
-              checked={formData.is_active}
-              onChange={(checked) =>
-                setFormData((prev) => ({ ...prev, is_active: checked }))
-              }
-            />
-            <Label htmlFor="is_active">Account Active</Label>
-          </div>
+        
         </div>
 
         {/* Submit button */}
-        <div className="flex flex-row-reverse mt-10 border-t py-3">
+        <div className="flex flex-row-reverse mt-10 py-3">
           <Button
             variant="primary"
             disabled={isLoading}

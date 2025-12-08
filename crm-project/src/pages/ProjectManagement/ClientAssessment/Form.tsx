@@ -1,0 +1,136 @@
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../app/store";
+import ComponentCard from "../../../components/common/ComponentCard"; 
+import Checkbox from "../../../components/form/input/Checkbox";
+import Button from "../../../components/ui/button/Button";
+import Alert from "../../../components/ui/alert/Alert";
+import { 
+    useGetClientAssessmentTypeQuery, 
+    useCreateClientAssessmentTypeMutation,
+    useDeleteClientAssessmentTypeMutation 
+} from "../../../service/project";
+
+const ClientAssessmentTypeForm: React.FC = () => {
+    const { clientdetail } = useSelector((state: RootState) => state.project);
+    const { assessment_types } = useSelector((state: RootState) => state.assessment);
+
+    const { data: existingAssessment, isLoading: isFetching } = useGetClientAssessmentTypeQuery(
+        { 
+            client_id: clientdetail?.id || 0, 
+            page: 1, 
+            pageSize: 1000 
+        }, 
+        { refetchOnMountOrArgChange: true, skip: !clientdetail?.id }
+    );
+
+    const [createClientAssessmentType, { isLoading: isCreating }] = useCreateClientAssessmentTypeMutation();
+    const [deleteClientAssessmentType, { isLoading: isDeleting }] = useDeleteClientAssessmentTypeMutation();
+    
+    const [selectedIds, setSelectedIds] = useState<number[]>([]);
+    const [status, setStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
+
+    useEffect(() => {
+        if (existingAssessment?.results) {
+            const currentIds = existingAssessment.results.map((item: any) => 
+                Number(item.assessment_type || item.assesment_type)
+            );
+            setSelectedIds(currentIds);
+        }
+    }, [existingAssessment]);
+
+    const handleCheckboxChange = (id: number, isChecked: boolean) => {
+        setSelectedIds((prev) => {
+            if (isChecked) return [...prev, id];
+            return prev.filter(item => item !== id);
+        });
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setStatus(null);
+
+        if (!clientdetail?.id) return;
+        if (!existingAssessment?.results) return;
+
+        try {
+            const initialTypeIds = existingAssessment.results.map((r: any) => 
+                Number(r.assessment_type || r.assesment_type)
+            );
+            
+            const idsToAdd = selectedIds.filter(id => !initialTypeIds.includes(id));
+
+            const itemsToRemove = existingAssessment.results.filter((r: any) => 
+                !selectedIds.includes(Number(r.assessment_type || r.assesment_type))
+            );
+
+            if (idsToAdd.length === 0 && itemsToRemove.length === 0) {
+                setStatus({ type: 'success', message: "No changes detected." });
+                return;
+            }
+
+            const createPromises = idsToAdd.map(typeId => 
+                createClientAssessmentType({
+                    client: clientdetail.id,
+                    assessment_type: typeId 
+                }).unwrap()
+            );
+
+            const deletePromises = itemsToRemove.map((item: any) => 
+                deleteClientAssessmentType(item.id).unwrap()
+            );
+
+            await Promise.all([...createPromises, ...deletePromises]);
+
+            setStatus({ type: 'success', message: "Assessments updated successfully!" });
+
+        } catch (error: any) {
+            console.error(error);
+            setStatus({ type: 'error', message: "Failed to update assessments." });
+        }
+    };
+
+    const isSaving = isCreating || isDeleting;
+
+    if (isFetching) return <div className="p-4 text-center text-gray-500">Loading assignments...</div>;
+
+    return ( 
+        <ComponentCard title={`Assign Assessment Type: ${clientdetail?.name}`}>
+            <form onSubmit={handleSubmit} className="space-y-6">
+                
+                {status && (
+                    <Alert variant={status.type} title="" message={status.message} />
+                )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[400px] overflow-y-auto p-1">
+                    {assessment_types.length > 0 ? (
+                        assessment_types.map((item: any) => {
+                            const typeId = Number(item.value);
+                            return (
+                                <div key={item.value} className="flex items-center gap-3 p-3 border border-gray-100 rounded-lg hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-white/5">
+                                    <Checkbox 
+                                        id={`type-${typeId}`}
+                                        label={item.label} 
+                                        checked={selectedIds.includes(typeId)}
+                                        color="success"
+                                        onChange={(checked) => handleCheckboxChange(typeId, checked)} 
+                                    />
+                                </div>
+                            );
+                        })
+                    ) : (
+                        <p className="col-span-2 text-gray-500 text-center">No assessment types configured.</p>
+                    )}
+                </div>
+
+                <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
+                    <Button disabled={isSaving}>
+                        {isSaving ? "Saving..." : "Save Changes"}
+                    </Button>
+                </div>
+            </form>
+        </ComponentCard>
+     );
+}
+ 
+export default ClientAssessmentTypeForm;

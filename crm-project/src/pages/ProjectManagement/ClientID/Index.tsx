@@ -9,6 +9,7 @@ import { useGetClientDetailQuery } from "../../../service/project";
 import { setClientDetail } from "../../../features/project";
 import { RootState } from "../../../app/store";
 import ClientTeamEdit from "../ClientTeam/Edit";
+import ClientAssessmentTypeForm from "../ClientAssessment/Form";
 
 const ClientIDIndex = () => {
     const { id } = useParams<{ id: string }>(); 
@@ -33,8 +34,9 @@ const ClientIDIndex = () => {
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 
-                <div className="h-fit">
+                <div className="grid gap-4 h-fit">
                     <ClientEdit />
+                    <ClientAssessmentTypeForm />
                 </div>
 
                 <div className="grid gap-4 h-fit">

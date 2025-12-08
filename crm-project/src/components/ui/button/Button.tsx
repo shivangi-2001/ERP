@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 interface ButtonProps {
   children: ReactNode;
   size?: "xs" | "sm" | "md";
-  variant?: "primary" | "outline" | "error" | "warning" | "none";
+  variant?: "primary" | "outline" | "error" | "success"| "info" | "warning" | "none";
   startIcon?: ReactNode;
   endIcon?: ReactNode;
   onClick?: () => void;
@@ -35,6 +35,10 @@ const Button: React.FC<ButtonProps> = ({
       "bg-yellow-500 text-white shadow-theme-xs hover:bg-yellow-600 disabled:bg-yellow-300",
     error:
       "bg-red-500 text-white shadow-theme-xs hover:bg-red-600 disabled:bg-red-300",
+    info:
+      "bg-teal-500 text-white shadow-theme-xs hover:bg-teal-600 disabled:bg-teal-300",
+    success:
+      "bg-green-500 text-white shadow-theme-xs hover:bg-green-600 disabled:bg-green-300",
     outline:
       "bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/[0.03] dark:hover:text-gray-300",
   };

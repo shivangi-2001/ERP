@@ -1,6 +1,9 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from core.models import AssessmentType
+from django.contrib.auth import get_user_model
+from core.models import AssessmentType, CompilanceType
+
+TESTER = get_user_model()
 
 class ClientAddress(models.Model):
     address = models.CharField(max_length=300)
@@ -30,21 +33,39 @@ class ClientTeam(models.Model):
     designation = models.CharField(max_length=255)
     mobile_code = models.CharField(max_length=10)
     mobile = models.CharField(max_length=15)
-    company = models.ForeignKey(
+    client = models.ForeignKey(
         ClientDetail, 
         on_delete=models.CASCADE, 
         related_name='teams'
     )
     
     class Meta:
-        unique_together = ('company', 'email')
+        unique_together = ('client', 'email')
     
     def __str__(self):
         return self.name
     
 class ClientAssessmentType(models.Model):
-    assesment_type = models.ForeignKey(AssessmentType, on_delete=models.CASCADE, related_name='client_assessment_type')
+    assessment_type = models.ForeignKey(AssessmentType, on_delete=models.CASCADE, related_name='client_assessment_type')
     client = models.ForeignKey(ClientDetail, on_delete=models.CASCADE, related_name='client_assessement')
     
     class Meta:
-        unique_together = ('assesment_type', 'client')
+        unique_together = ('assessment_type', 'client')
+        
+    def __str__(self):
+        return f"{self.client.name} - {self.assessment_type.name}"
+        
+class UrlMapping(models.Model):
+    start_date = models.DateTimeField(null=True, blank=True)
+    end_date = models.DateTimeField(null=True, blank=True)
+    qa_date = models.DateTimeField(null=True, blank=True)
+    url = models.CharField(max_length=2000)
+    client_assessment = models.ForeignKey(ClientAssessmentType, on_delete=models.CASCADE, related_name='urls')
+    tester = models.ForeignKey(TESTER, on_delete=models.DO_NOTHING, null=True, blank=True)
+    compliance = models.ForeignKey(CompilanceType, on_delete=models.CASCADE, null=True, blank=True)
+    
+    def __str__(self):
+        return f"{self.url} ({self.client})"
+    
+    
+        

@@ -26,7 +26,7 @@ const ClientTeamTable: React.FC = () => {
   const [deleteTeamMember, { isLoading: isDeleting }] =
     useDeleteClientTeamMutation();
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: number|undefined) => {
     if (window.confirm("Are you sure you want to remove this team member?")) {
       try {
         await deleteTeamMember(id).unwrap();
@@ -116,13 +116,14 @@ const ClientTeamTable: React.FC = () => {
                         console.log(team)
                         dispatch(toggleEditingTeam());
                         dispatch(setClientTeam(team))
+                        
                       }}
                     >
                       <PencilIcon className="size-5 text-blue-700 hover:text-blue-500" />
                     </button>
 
                     <button
-                      onClick={() => handleDelete(team.id)}
+                      onClick={() => handleDelete(team?.id)}
                       disabled={isDeleting}
                       className="text-gray-500 hover:text-red-600 transition-colors disabled:opacity-50"
                       title="Remove Member"

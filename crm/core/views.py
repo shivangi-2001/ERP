@@ -22,6 +22,16 @@ class VulnerabilityViewSet(viewsets.ModelViewSet):
     queryset = Vulnerabilities.objects.select_related("category_of_testing").all()
     serializer_class = VulnerabilitySerializer
     pagination_class = StandardResultsSetPagination
+    
+    def get_queryset(self):
+        queryset = Vulnerabilities.objects.select_related('category_of_testing').all()
+        
+        assessment_type = self.request.query_params.get('assessment_type')
+        
+        if assessment_type is not None:
+            queryset = queryset.filter(category_of_testing_id=assessment_type)
+            
+        return queryset
 
 class TeamViewset(viewsets.ModelViewSet):
     queryset =  TeamsManagement.objects.all()

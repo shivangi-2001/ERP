@@ -28,8 +28,7 @@ import ProtectedRoute from "./layout/ProtectedLayout";
 // Project Management
 import OnBoardIndex from "./pages/ProjectManagement/Onboard/Index";
 // import ClientID from "./components/Client/clientId";
-import Manage from "./pages/ProjectManagement/Manage";
-import TestingEnvironment from "./pages/Testing/TestingEnvironment";
+import ManageIndex from "./pages/ProjectManagement/Manage/Index";
 
 // Assessment Type
 import AssessmentType from "./pages/AssestManagement/AssessmentType";
@@ -40,6 +39,7 @@ import ComplianceType from "./pages/AssestManagement/ComplianceType";
 // Team Management
 import TeamGroup from "./pages/TeamManagement/teamGroup";
 import EmployeeIndex from "./pages/TeamManagement/employeeIndex";
+import UrlMappingIndex from "./pages/ProjectManagement/UrlMapping/Index";
 
 
 export default function App() {
@@ -67,11 +67,10 @@ export default function App() {
 
             {/* Project Management Pages */}
             <Route index path="/on-board" element={<OnBoardIndex />} />
-            <Route index path="/manage" element={<Manage />} />
-
-            {/* Clients Company Details */}
-            <Route index path="/clients" element={<></>}/>
             <Route index path="/clients/:id" element={<ClientIDIndex />}/>
+            <Route index path="/manage" element={<ManageIndex />} />
+            <Route index path="/client/:id" element={<UrlMappingIndex/>} />
+            
             
             {/* Assest Management */}
             <Route  path="/asessment-type" element={<AssessmentType />}/>
@@ -82,9 +81,6 @@ export default function App() {
             <Route  path="/teams" element={<TeamGroup />}/>
             <Route  path="/employee" element={<EmployeeIndex />}/>
             
-            {/* Testing Environment */}
-            <Route path="/clients/:id/environment" element={<TestingEnvironment />} />
-
             {/* Others Page */}
             <Route path="/profile" element={<UserProfiles />} />
             <Route path="/calendar" element={<Calendar />} />

@@ -29,8 +29,10 @@ function EmployeeIndex() {
   }, [data, dispatch]);
   return (
     <div className="grid md:grid-cols-2 gap-2">
-      <AddEmployee />
-      <div className="flex flex-col gap-4">
+      <div className="h-fit">
+        <AddEmployee />
+      </div>
+      <div className="flex flex-col gap-4 h-fit">
         <EmployeeList />
         <UpdateEmployee />
       </div>

@@ -4,7 +4,6 @@ import { Modal } from "../../../components/ui/modal";
 import { useModal } from "../../../hooks/useModal";
 import { PlusIcon } from "../../../icons";
 import ClientForm from "../Client/Form";
-import AddClient from "../Client/Form";
 import ClientTable from "../Client/Table";
 
 const OnBoardIndex = () => {

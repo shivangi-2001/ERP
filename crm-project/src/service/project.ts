@@ -1,19 +1,14 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import baseAuthHeader from "./baseAuthHeader";
-import { ClientDetails, ClientDetail, ClientTeam } from "../types/project";
+import { ClientDetails, ClientDetail, ClientTeam, ClientAssessment, ClientAssessmentType, UrlMapping, UrlMappingType } from "../types/project";
 
 export const projectApi = createApi({
     reducerPath: "projectApi",
     baseQuery: baseAuthHeader,
-    tagTypes: ["client", "teams"],
+    tagTypes: ["client", "teams", "url"],
     endpoints: (builder) => ({
-        getClientDetails: builder.query<ClientDetails, { next: number } | void>({
-            query: (params) => {
-                if (params && 'page' in params) {
-                    return `/client/details/?page=${params.page}`;
-                }
-                return "/client/details/";
-            },
+        getClientDetails: builder.query<ClientDetails,  { page: number; pageSize: number }>({
+            query: ({page, pageSize}) => `/client/details/?page=${page}&page_size=${pageSize}`,
             providesTags: ["client"],
         }),
 
@@ -49,6 +44,12 @@ export const projectApi = createApi({
         }),
 
 
+
+        getClientTeamByClientId: builder.query<ClientDetails, {id: number, page: number; pageSize: number}>({
+            query: ({id, page, pageSize}) => `/client/teams/${id}?page=${page}&pageSize=${pageSize}`,
+            providesTags: ["client"],
+        }),
+
         createClientTeam: builder.mutation<ClientTeam, Partial<ClientTeam>>({
             query: (body) => ({
                 url: "/client/teams/",
@@ -75,6 +76,68 @@ export const projectApi = createApi({
             invalidatesTags: ["teams"],
         }),
 
+
+
+        getClientAssessmentType: builder.query<ClientAssessmentType, {client_id: number, page: number, pageSize: number}>({
+            query:({client_id, page, pageSize}) => `/client/assessment?client=${client_id}&page=${page}&page_size=${pageSize}`,
+            providesTags: ["client"]
+        }),
+
+        createClientAssessmentType: builder.mutation<ClientAssessment, Partial<ClientAssessment>>({
+            query:(body) => ({
+                url: `/client/assessment/`,
+                method: 'POST',
+                body
+            }),
+            invalidatesTags: ["client"]
+        }),
+
+        editClientAssessmentType: builder.mutation<ClientAssessment, {id: number, body: Partial<ClientAssessment>}>({
+            query:({id, body}) => ({
+                url: `/client/assessment/${id}`,
+                method: 'PATCH',
+                body
+            }),
+            invalidatesTags: ["client"]
+        }),
+
+        deleteClientAssessmentType: builder.mutation<void, string | number>({
+            query: (id) => ({
+                url: `/client/assessment/${id}/`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["client"],
+        }),
+
+
+
+        getUrlMapping: builder.query<UrlMappingType, {client_id:number|undefined, assessment_type:string|null,page: number; pageSize: number}>({
+            query: ({client_id, assessment_type, page, pageSize}) => `/client/url/?client_id=${client_id}&assessment_type=${assessment_type}&page=${page}&page_size=${pageSize}`,
+            providesTags: ["url"],
+        }),
+
+        createUrlMapping: builder.mutation<UrlMapping, Partial<UrlMapping>>({
+            query: (body) => ({
+                url: "/client/url/",
+                method: "POST",
+                body,
+            }),
+            invalidatesTags: ["url"],
+        }),
+
+        getUrlMappingByID: builder.query<UrlMapping, { id: number }>({
+            query: ({id}) => `/client/url/${id}/`,
+            providesTags: ["url"],
+        }),
+
+        editUrlMappingByID: builder.mutation<UrlMapping, {id: number, body: Partial<UrlMapping>}>({
+            query: ({id, body}) => ({
+                url: `/client/url/${id}/`,
+                method: "PATCH",
+                body,
+            }),
+            invalidatesTags: ["url"],
+        })
     })
 });
 
@@ -85,7 +148,18 @@ export const {
     useEditClientDetailMutation,
     useDeleteClientDetailMutation,
 
+    useGetClientTeamByClientIdQuery,
     useCreateClientTeamMutation,
     useEditClientTeamMutation,
-    useDeleteClientTeamMutation
+    useDeleteClientTeamMutation,
+
+    useGetClientAssessmentTypeQuery,
+    useCreateClientAssessmentTypeMutation,
+    useEditClientAssessmentTypeMutation,
+    useDeleteClientAssessmentTypeMutation,
+
+    useGetUrlMappingQuery,
+    useCreateUrlMappingMutation,
+    useGetUrlMappingByIDQuery,
+    useEditUrlMappingByIDMutation,
 } = projectApi;

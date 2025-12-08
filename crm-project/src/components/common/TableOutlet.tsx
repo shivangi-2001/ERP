@@ -68,7 +68,7 @@ const TableOutlet: React.FC<TableOutletProps> = ({
 
   return (
     <div
-      className={`flex flex-col justify-between rounded border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] ${className}`}
+      className={`h-fit rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900 ${className}`}
     >
       {/* ===== Header ===== */}
       <div
