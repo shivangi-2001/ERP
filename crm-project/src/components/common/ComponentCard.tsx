@@ -62,7 +62,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
 
       {/* Card Body */}
       <div className="">
-        <div className="p-4">{children}</div>
+        <div className="">{children}</div>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Option {
   value: string;
@@ -10,8 +10,8 @@ interface SelectProps {
   placeholder?: string;
   onChange: (value: string) => void;
   className?: string;
-  defaultValue?: string;
-  disabled: boolean;
+  defaultValue?: string | number | readonly string[] | null | undefined; 
+  disabled?: boolean; // Made optional to match typical usage
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -20,15 +20,20 @@ const Select: React.FC<SelectProps> = ({
   onChange,
   className = "",
   defaultValue = "",
-  disabled=false
+  disabled = false
 }) => {
   // Manage the selected value
-  const [selectedValue, setSelectedValue] = useState<string>(defaultValue);
+  const [selectedValue, setSelectedValue] = useState(defaultValue);
+
+  // Sync state if defaultValue changes externally (optional but recommended)
+  useEffect(() => {
+    setSelectedValue(defaultValue);
+  }, [defaultValue]);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     setSelectedValue(value);
-    onChange(value); 
+    onChange(value);
   };
 
   return (
@@ -38,12 +43,12 @@ const Select: React.FC<SelectProps> = ({
           ? "text-gray-800 dark:text-white/90"
           : "text-gray-400 dark:text-gray-400"
       } ${
-          disabled &&
-          "text-gray-500 border-gray-300 opacity-40 bg-gray-100 cursor-not-allowed dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700"
-        }${className}`}
-       
-
-      value={selectedValue}
+        disabled &&
+        "text-gray-500 border-gray-300 opacity-40 bg-gray-100 cursor-not-allowed dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700"
+      }${className}`}
+      
+      // FIX HERE: Coalesce null/undefined to empty string ""
+      value={selectedValue ?? ""} 
       onChange={handleChange}
       disabled={disabled}
     >

@@ -148,10 +148,10 @@ const ClientForm = () => {
 
   return (
     <ComponentCard title="Add Client" desc="Add new client details">
-      <form className="space-y-6" onSubmit={handleSubmit}>
+      <form className="space-y-6 p-5" onSubmit={handleSubmit}>
         
         {/* Name */}
-        <div>
+        <div className="mb-4">
           <Label htmlFor="name">Company Name</Label>
           <Input
             type="text"
@@ -165,7 +165,7 @@ const ClientForm = () => {
         </div>
 
         {/* Email */}
-        <div>
+        <div className="mb-4">
           <Label htmlFor="email">Company Email</Label>
           <Input
             type="email"
@@ -180,20 +180,20 @@ const ClientForm = () => {
         </div>
 
         {/* Phone */}
-        <div>
+        <div className="mb-4">
           <Label>Company Phone</Label>
           <PhoneInput
             countries={getCountryPhoneCodes}
             defaultCode={formData.phone_code}
             defaultNumber={formData.phone}
             onChange={handlePhoneChange}
-            error={errors.phone}
+            error={!!errors.phone}
             hint={errors.phone}
           />
         </div>
 
         {/* Profile */}
-        <div>
+        <div className="my-4">
           <Label>Upload Company Profile (optional)</Label>
           <FileInput 
             onChange={handleFileChange} 
@@ -203,7 +203,7 @@ const ClientForm = () => {
         </div>
 
         {/* Address Line */}
-        <div>
+        <div className="mb-4">
           <Label htmlFor="address">Company Address</Label>
           <Input
             type="text"
@@ -214,11 +214,10 @@ const ClientForm = () => {
             error={!!errors.address?.address}
             hint={errors.address?.address}
           />
-          {errors.address?.address && <p className="text-xs text-end text-red-600">{errors.address.address}</p>}
         </div>
 
         {/* Country & State */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3 mb-4">
           <div>
             <Label htmlFor="country">Country</Label>
             <InputSelect
@@ -227,7 +226,7 @@ const ClientForm = () => {
               onSelect={handleCountrySelect}
               defaultValue={formData.address?.country}
               name="country"
-              error={errors.address?.country}
+              error={!!errors.address?.country}
               hint={errors.address?.country}
             />
           </div>
@@ -239,15 +238,14 @@ const ClientForm = () => {
               onSelect={handleStateSelect}
               defaultValue={formData.address?.state}
               name="state"
-              error={errors.address?.state}
+              error={!!errors.address?.state}
               hint={errors.address?.state}
             />
-            {errors.address?.state && <p className="text-xs text-end text-red-600">{errors.address.state}</p>}
           </div>
         </div>
 
         {/* City & Zip */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3 mb-4">
           <div>
             <Label htmlFor="city">City</Label>
             <InputSelect
@@ -256,10 +254,9 @@ const ClientForm = () => {
               onSelect={handleCitySelect}
               defaultValue={formData.address?.city}
               name="city"
-              error={errors.address?.city}
+              error={!!errors.address?.city}
               hint={errors.address?.city}
             />
-            {errors.address?.city && <p className="text-xs text-end text-red-600">{errors.address.city}</p>}
           </div>
           <div>
             <Label htmlFor="postal_code">Post Code</Label>
@@ -272,11 +269,9 @@ const ClientForm = () => {
               error={!!errors.address?.postal_code}
               hint={errors.address?.postal_code}
             />
-            {errors.address?.postal_code && <p className="text-xs text-end text-red-600">{errors.address.postal_code}</p>}
           </div>
         </div>
 
-        <hr />
 
         <div className="flex justify-end gap-2">
           <Button disabled={isLoading}>

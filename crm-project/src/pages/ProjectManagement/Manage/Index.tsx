@@ -45,8 +45,8 @@ const ManageIndex: React.FC = () => {
       <Card
         title="Client Details"
         desc="Manage clients evalution"
-        searchInput={true}
-        searchPlaceholder="Search Clients"
+        enableSearch={true}
+        searchPlaceholder="Search Clients e.g: zoho, ..."
       >
         <TableOutlet
           rowsPerPage={rowperpage}
@@ -139,7 +139,7 @@ const ManageIndex: React.FC = () => {
         </TableOutlet>
       </Card>
 
-      <Modal isOpen={isOpen} onClose={closeModal}>
+      <Modal  isOpen={isOpen} onClose={closeModal}>
         <SelectAssessmentType ClientID={clientID} />
       </Modal>
     </div>

@@ -1,6 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import baseAuthHeader from "./baseAuthHeader";
-import { ClientDetails, ClientDetail, ClientTeam, ClientAssessment, ClientAssessmentType, UrlMapping, UrlMappingType } from "../types/project";
+import { ClientDetails, ClientDetail, ClientTeam, ClientAssessment, ClientAssessmentType, UrlMapping, UrlMappingType, FindingType } from "../types/project";
 
 export const projectApi = createApi({
     reducerPath: "projectApi",
@@ -78,8 +78,8 @@ export const projectApi = createApi({
 
 
 
-        getClientAssessmentType: builder.query<ClientAssessmentType, {client_id: number, page: number, pageSize: number}>({
-            query:({client_id, page, pageSize}) => `/client/assessment?client=${client_id}&page=${page}&page_size=${pageSize}`,
+        getClientAssessmentType: builder.query<ClientAssessmentType, {client_id: number, assessment_type: string|null, page: number, pageSize: number}>({
+            query:({client_id, assessment_type, page, pageSize}) => `/client/assessment?client=${client_id}&assessment_type=${assessment_type}&page=${page}&page_size=${pageSize}`,
             providesTags: ["client"]
         }),
 
@@ -137,6 +137,16 @@ export const projectApi = createApi({
                 body,
             }),
             invalidatesTags: ["url"],
+        }),
+
+
+
+        getInProgressProject: builder.query<UrlMappingType, void>({
+            query: () => `/client/in-progress`
+        }),
+
+        getFindingsByProjectID: builder.query<FindingType, {project_id:number, page: number, pageSize: number}>({
+            query:({project_id, page, pageSize}) => `/client/findings/?project_id=${project_id}&page=${page}&pageSize=${pageSize}`
         })
     })
 });
@@ -162,4 +172,8 @@ export const {
     useCreateUrlMappingMutation,
     useGetUrlMappingByIDQuery,
     useEditUrlMappingByIDMutation,
+
+    useGetInProgressProjectQuery,
+
+    useGetFindingsByProjectIDQuery,
 } = projectApi;

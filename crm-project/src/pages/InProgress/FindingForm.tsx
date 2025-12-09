@@ -1,29 +1,28 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import ComponentCard from "../../../components/common/ComponentCard";
-import Form from "../../../components/form/Form";
-import Input from "../../../components/form/input/InputField";
-import Label from "../../../components/form/Label";
-import Select from "../../../components/form/Select";
-import Button from "../../../components/ui/button/Button";
-import Alert from "../../../components/ui/alert/Alert";
-import TextArea from "../../../components/form/input/TextArea";
-import { RootState } from "../../../app/store";
-import { Vulnerability } from "../../../types/assessment";
-import { useAddVulnerabilityMutation } from "../../../service/assessment";
-import { CalenderIcon } from "../../../icons"; // You might want to rename this icon if it's a Calculator
-import { useModal } from "../../../hooks/useModal";
-import { Modal } from "../../../components/ui/modal";
-import CVSS from "../CVSS/Index";
+import Card from "../../components/common/Card";
+import Form from "../../components/form/Form";
+import Input from "../../components/form/input/InputField";
+import Label from "../../components/form/Label";
+import Alert from "../../components/ui/alert/Alert";
+import { Modal } from "../../components/ui/modal";
+import Select from "../../components/form/Select";
+import Button from "../../components/ui/button/Button";
+import TextArea from "../../components/form/input/TextArea";
+import { CalenderIcon } from "../../icons";
+import { useModal } from "../../hooks/useModal";
+import { RootState } from "../../app/store";
+import { Vulnerability } from "../../types/assessment";
 
-const VulnerabilityForm = () => {
+import CVSS from "../AssestManagement/CVSS/Index";
+
+const FindingForm = () => {
   const { isOpen, closeModal, toggleModal } = useModal();
-  
-  // Redux Selectors
-  const { baseScore, severity } = useSelector((state: RootState) => state.cvss);
-  const { assessment_types } = useSelector((state: RootState) => state.assessment);
 
-  const [addVulnerability, { isLoading }] = useAddVulnerabilityMutation();
+  const { baseScore, severity } = useSelector((state: RootState) => state.cvss);
+  const { assessment_types } = useSelector(
+    (state: RootState) => state.assessment
+  );
 
   const initialFormState: Partial<Vulnerability> = {
     name: "",
@@ -31,25 +30,25 @@ const VulnerabilityForm = () => {
     impact: "",
     reference: "",
     remediations: "",
-    cvss: "", // Start empty, let useEffect populate it
+    cvss: "",
     category_of_testing_id: 0,
   };
-
-  const [formData, setFormData] = useState<Partial<Vulnerability>>(initialFormState);
-
   const [statusMessage, setStatusMessage] = useState<{
     type: "success" | "error";
     text: string;
   } | null>(null);
 
+  const [formData, setFormData] =
+    useState<Partial<Vulnerability>>(initialFormState);
+
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (baseScore && severity) {
-        setFormData(prev => ({
-            ...prev,
-            cvss: `${baseScore} (${severity})`
-        }));
+      setFormData((prev) => ({
+        ...prev,
+        cvss: `${baseScore} (${severity})`,
+      }));
     }
   }, [baseScore, severity]);
 
@@ -59,58 +58,8 @@ const VulnerabilityForm = () => {
       setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatusMessage(null);
-    setErrors({});
-
-    if (!formData.name || !formData.category_of_testing_id) {
-      setStatusMessage({
-        type: "error",
-        text: "Please fill all required fields.",
-      });
-      return;
-    }
-
-    try {
-      await addVulnerability({
-        name: formData.name,
-        category_of_testing_id: Number(formData.category_of_testing_id),
-        description: formData.description,
-        impact: formData.impact,
-        reference: formData.reference,
-        remediations: formData.remediations,
-        cvss: formData.cvss,
-      }).unwrap();
-
-      setStatusMessage({
-        type: "success",
-        text: "Vulnerability added successfully!",
-      });
-
-      setFormData(initialFormState);
-
-      setTimeout(() => setStatusMessage(null), 3000);
-    } catch (error: any) {
-      console.error("Error adding vulnerability:", error);
-
-      if (error?.data) {
-        setErrors(error.data);
-        const detailMsg = error.data.detail || "Failed to add vulnerability. Please check inputs.";
-        setStatusMessage({ type: "error", text: detailMsg });
-      } else {
-        setStatusMessage({
-          type: "error",
-          text: "Something went wrong. Please try again.",
-        });
-      }
-    }
-  };
-
   return (
-    <ComponentCard title="Add Vulnerability" className="h-fit">
-      
+    <Card title="" enableSearch={true}>
       {statusMessage && (
         <div className="mb-4">
           <Alert
@@ -126,9 +75,8 @@ const VulnerabilityForm = () => {
         <CVSS />
       </Modal>
 
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={() => console.log("first")} className="p-5">
         <div className="flex flex-col gap-5">
-          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="name">
@@ -146,26 +94,26 @@ const VulnerabilityForm = () => {
             </div>
 
             <div>
-                <Label htmlFor="cvss">CVSS Score</Label>
-                <div className="relative">
+              <Label htmlFor="cvss">CVSS Score</Label>
+              <div className="relative">
                 <Input
-                    type="text"
-                    id="cvss"
-                    className="pl-12" // Add padding-left to make room for icon
-                    onChange={(e) => handleChange("cvss", e.target.value)}
-                    value={formData.cvss || ""}
-                    placeholder="e.g. 9.8 (Critical)"
-                    error={!!errors.cvss}
-                    hint={errors.cvss}
+                  type="text"
+                  id="cvss"
+                  className="pl-12" // Add padding-left to make room for icon
+                  onChange={(e) => handleChange("cvss", e.target.value)}
+                  value={formData.cvss || ""}
+                  placeholder="e.g. 9.8 (Critical)"
+                  error={!!errors.cvss}
+                  hint={errors.cvss}
                 />
-                <span 
-                    onClick={toggleModal} 
-                    className="absolute left-0 top-0 h-11 w-11 flex items-center justify-center border-r border-gray-200 text-gray-500 cursor-pointer hover:bg-gray-50 dark:border-gray-800 dark:text-gray-400 dark:hover:bg-white/5"
-                    title="Open CVSS Calculator"
+                <span
+                  onClick={toggleModal}
+                  className="absolute left-0 top-0 h-11 w-11 flex items-center justify-center border-r border-gray-200 text-gray-500 cursor-pointer hover:bg-gray-50 dark:border-gray-800 dark:text-gray-400 dark:hover:bg-white/5"
+                  title="Open CVSS Calculator"
                 >
-                    <CalenderIcon className="size-5 text-theme-sm" />
+                  <CalenderIcon className="size-5 text-theme-sm" />
                 </span>
-                </div>
+              </div>
             </div>
           </div>
 
@@ -177,11 +125,11 @@ const VulnerabilityForm = () => {
             <Select
               options={assessment_types || []}
               placeholder="Select category"
-              onChange={(val) => handleChange("category_of_testing_id", Number(val))}
+              onChange={(val) =>
+                handleChange("category_of_testing_id", Number(val))
+              }
               defaultValue={formData.category_of_testing_id}
               disabled={false}
-              error={!!errors.category_of_testing_id}
-              hint={errors.category_of_testing_id}
             />
           </div>
 
@@ -243,13 +191,13 @@ const VulnerabilityForm = () => {
         </div>
 
         <div className="flex flex-row-reverse mt-10 border-t pt-4">
-          <Button disabled={isLoading}>
-            {isLoading ? "Saving..." : "Add Vulnerability"}
-          </Button>
+          {/* <Button disabled={isLoading}> */}
+            {/* {isLoading ? "Saving..." : "Add Vulnerability"} */}
+          {/* </Button> */}
         </div>
       </Form>
-    </ComponentCard>
+    </Card>
   );
 };
 
-export default VulnerabilityForm;
+export default FindingForm;

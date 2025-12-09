@@ -5,18 +5,14 @@ import PhoneInput from "../../../components/form/group-input/PhoneInput";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import Button from "../../../components/ui/button/Button";
-import { getUniquePhoneCodes } from "../../../utils/location";
-import { useEditClientTeamMutation } from "../../../service/project";
-import { RootState } from "../../../app/store";
 import Alert from "../../../components/ui/alert/Alert";
+import { getUniquePhoneCodes } from "../../../utils/location";
+import { RootState } from "../../../app/store";
 import { ClientTeam } from "../../../types/project";
-
-
+import { useEditClientTeamMutation } from "../../../service/project";
 
 const ClientTeamEdit: React.FC = () => {
-  const { clientdetail, clientteam } = useSelector(
-    (state: RootState) => state.project
-  );
+  const { clientdetail, clientteam } = useSelector((state: RootState) => state.project);
 
   const [editClientTeam, { isLoading }] = useEditClientTeamMutation();
 
@@ -31,11 +27,9 @@ const ClientTeamEdit: React.FC = () => {
     mobile_code: "+91",
     mobile: "",
     designation: "",
-    company: 0,
-    company_id: 0
+    client: 0,
   });
 
-  // 2. Populate form data when clientteam (the user being edited) changes
   useEffect(() => {
     if (clientteam && clientdetail) {
       setFormData({
@@ -44,8 +38,7 @@ const ClientTeamEdit: React.FC = () => {
         mobile_code: clientteam.mobile_code || "+91",
         mobile: clientteam.mobile,
         designation: clientteam.designation,
-        company: clientdetail.id, 
-        company_id:  clientdetail.id, 
+        client: clientdetail.id, 
       });
     }
   }, [clientteam, clientdetail]);
@@ -73,7 +66,7 @@ const ClientTeamEdit: React.FC = () => {
     setStatusMessage(null);
 
     // Safety check
-    if (!clientteam?.id || !formData.company) {
+    if (!clientteam?.id || !formData.client) {
       setStatusMessage({
         type: "error",
         text: "System Error: Missing Team ID or Company ID.",

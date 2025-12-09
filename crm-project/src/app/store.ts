@@ -1,16 +1,21 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { authApi } from "../service/auth"
-import { assessmentApi } from '../service/assessment'
 import authReducer from '../features/auth'
+import { authApi } from "../service/auth"
+
+import cvssReducer from "../features/cvss"
 import assestReducer from "../features/assessment"
+import { assessmentApi } from '../service/assessment'
+
 import projectReducer from "../features/project"
-import myTeamReducer from "../features/myTeam"
 import { projectApi } from '../service/project'
+
+import myTeamReducer from "../features/myTeam"
 import { myTeamApi } from '../service/myTeam'
 
 export const store = configureStore({
   reducer: {
     assessment: assestReducer,
+    cvss: cvssReducer,
     myTeam: myTeamReducer,
     project: projectReducer,
     auth: authReducer,

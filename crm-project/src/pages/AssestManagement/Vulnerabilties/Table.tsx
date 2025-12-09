@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Table,
   TableHeader,
@@ -6,30 +7,31 @@ import {
   TableCell,
   TableRow,
 } from "../../../components/ui/table";
-import { Vulnerability } from "../../../types/assessment";
+import Card from "../../../components/common/Card";
+import TableOutlet from "../../../components/common/TableOutlet";
+import Input from "../../../components/form/input/InputField";
+import Select from "../../../components/form/Select";
 import {
   CheckCircleIcon,
   CloseIcon,
   PencilIcon,
   TrashBinIcon,
 } from "../../../icons";
-import {
-  useGetVulnerabilitiesQuery,
-  useDeleteVulnerabilityByIdMutation,
-  useUpdateVulnerabilityByIdMutation,
-} from "../../../service/assessment";
-import Input from "../../../components/form/input/InputField";
-import Select from "../../../components/form/Select";
-import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
-import TableOutlet from "../../../components/common/TableOutlet";
+import { Vulnerability } from "../../../types/assessment";
 import {
   setRowsPerPage,
   setCurrentPage,
   setVulnerabilityList,
   setVulnerability,
 } from "../../../features/assessment";
-import Card from "../../../components/common/Card";
+import {
+  useGetVulnerabilitiesQuery,
+  useDeleteVulnerabilityByIdMutation,
+  useUpdateVulnerabilityByIdMutation,
+} from "../../../service/assessment";
+
+const TableTitle = ["Vulnerability Name", "Categry of testing", "Action"];
 
 const VulnerabilityTable: React.FC = () => {
   const dispatch = useDispatch();
@@ -115,12 +117,12 @@ const VulnerabilityTable: React.FC = () => {
 
   return (
     <Card
-    title=""
-      searchInput={true}
-      searchPlaceholder="Search Vulnerability"
+      title=""
+      enableSearch={true}
+      searchPlaceholder="Search Vulnerabilities e.g: CSRF, XSS, ..."
     >
       <TableOutlet
-      title="Vulnerability List"
+        title="Vulnerability Listing"
         rowsPerPage={rowperpage}
         setRowsPerPage={(rows) => dispatch(setRowsPerPage(rows))}
         totalRows={totalRows}
@@ -132,24 +134,14 @@ const VulnerabilityTable: React.FC = () => {
         <Table>
           <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
             <TableRow>
-              <TableCell
-                isHeader
-                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-              >
-                Vulnerability Name
-              </TableCell>
-              <TableCell
-                isHeader
-                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-              >
-                Category of Testing
-              </TableCell>
-              <TableCell
-                isHeader
-                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-              >
-                Action
-              </TableCell>
+              {TableTitle.map((header: string) => (
+                <TableCell
+                  isHeader
+                  className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                >
+                  {header}
+                </TableCell>
+              ))}
             </TableRow>
           </TableHeader>
 

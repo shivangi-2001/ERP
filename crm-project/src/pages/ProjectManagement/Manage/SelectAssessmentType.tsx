@@ -30,6 +30,7 @@ const SelectAssessmentType: React.FC<SelectAssessmentTypeProps> = ({ ClientID })
 
   const { data, isLoading } = useGetClientAssessmentTypeQuery({
     client_id: ClientID,
+    assessment_type:"",
     page: currentpage,
     pageSize: rowperpage,
   });
@@ -39,7 +40,7 @@ const SelectAssessmentType: React.FC<SelectAssessmentTypeProps> = ({ ClientID })
 
   return (
     <ComponentCard title="Select Assessment Type">
-      <div className="flex flex-row flex-wrap gap-3">
+      <div className="flex flex-row flex-wrap gap-3 p-5">
         {data?.results && data.results.length > 0 ? (
           data.results.map((item: any) => {
             

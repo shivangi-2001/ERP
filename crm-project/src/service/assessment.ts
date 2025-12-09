@@ -70,6 +70,12 @@ export const assessmentApi = createApi({
       providesTags: ["vulnerabilities"],
     }),
 
+    // search vulnerability
+    searchVulnerability: builder.query<VulnerabilityType,{assessment_type: string|null, search_text:string|null}>({
+      query: ({assessment_type, search_text}) => `vulnerabilities?assessment_type=${assessment_type}&name=${search_text}`,
+      providesTags: ["vulnerabilities"],
+    }), 
+
     // UPDATE BY ID ASSESSMENT TYPE
     updateVulnerabilityById: builder.mutation<Vulnerability, { id: number | string; data: Partial<Vulnerability> } >({
       query: ({ id, data }) => ({

@@ -17,7 +17,8 @@ const ClientAssessmentTypeForm: React.FC = () => {
 
     const { data: existingAssessment, isLoading: isFetching } = useGetClientAssessmentTypeQuery(
         { 
-            client_id: clientdetail?.id || 0, 
+            client_id: clientdetail?.id || 0,
+            assessment_type:"",
             page: 1, 
             pageSize: 1000 
         }, 
@@ -96,10 +97,12 @@ const ClientAssessmentTypeForm: React.FC = () => {
 
     return ( 
         <ComponentCard title={`Assign Assessment Type: ${clientdetail?.name}`}>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6 p-5">
                 
                 {status && (
-                    <Alert variant={status.type} title="" message={status.message} />
+                   <div className="mb-4">
+                     <Alert variant={status.type} title="" message={status.message} />
+                   </div>
                 )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[400px] overflow-y-auto p-1">

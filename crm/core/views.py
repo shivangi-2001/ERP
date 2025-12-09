@@ -26,10 +26,15 @@ class VulnerabilityViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Vulnerabilities.objects.select_related('category_of_testing').all()
         
+        name = self.request.query_params.get('name')
+        
         assessment_type = self.request.query_params.get('assessment_type')
         
         if assessment_type is not None:
-            queryset = queryset.filter(category_of_testing_id=assessment_type)
+            queryset = queryset.filter(category_of_testing__name=assessment_type)
+            
+        if name is not None:
+            queryset = queryset.filter(name__icontains=name)
             
         return queryset
 

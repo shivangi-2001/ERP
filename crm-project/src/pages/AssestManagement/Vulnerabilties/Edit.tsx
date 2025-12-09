@@ -4,21 +4,30 @@ import ComponentCard from "../../../components/common/ComponentCard";
 import Form from "../../../components/form/Form";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
-import { RootState } from "../../../app/store";
 import Select from "../../../components/form/Select";
 import Button from "../../../components/ui/button/Button";
-import { useUpdateVulnerabilityByIdMutation } from "../../../service/assessment";
+import { Modal } from "../../../components/ui/modal";
 import Alert from "../../../components/ui/alert/Alert";
-import { Vulnerability } from "../../../types/assessment";
-import TextArea from "../../../components/form/input/TextArea"; // Ensure path is correct
+import TextArea from "../../../components/form/input/TextArea"; 
 import { CalenderIcon, PencilIcon } from "../../../icons";
+import { useModal } from "../../../hooks/useModal";
+import { RootState } from "../../../app/store";
+import { Vulnerability } from "../../../types/assessment";
 import { toggleEditing } from "../../../features/assessment";
+import { useUpdateVulnerabilityByIdMutation } from "../../../service/assessment";
+import CVSS from "../CVSS/Index";
 
 const EditVulnerability = () => {
+  const { isOpen, closeModal, toggleModal } = useModal();
   const dispatch = useDispatch();
+  
+  // 1. Get Data from Redux
   const { selected_vulnerability, assessment_types, isEditing } = useSelector(
     (state: RootState) => state.assessment
   );
+  
+  // 2. Get CVSS Data to sync calculator with form
+  const { baseScore, severity } = useSelector((state: RootState) => state.cvss);
 
   const [updateVulnerability, { isLoading }] = useUpdateVulnerabilityByIdMutation();
 
@@ -40,6 +49,7 @@ const EditVulnerability = () => {
   
   const [fieldErrors, setFieldErrors] = useState<any>({});
 
+  // 3. Populate Form on Load
   useEffect(() => {
     if (selected_vulnerability) {
       setFormData({
@@ -55,13 +65,26 @@ const EditVulnerability = () => {
     }
   }, [selected_vulnerability]);
 
-  // Unified Handler: Accepts the field name and the direct value
+  // 4. Sync CVSS Calculator result to Form Data
+  useEffect(() => {
+    if (isEditing && baseScore && severity) {
+        setFormData(prev => ({
+            ...prev,
+            cvss: `${baseScore} (${severity})`
+        }));
+    }
+  }, [baseScore, severity, isEditing]);
+
   const handleChange = (field: keyof Vulnerability, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    
-    // Clear error for this field if it exists
     if (fieldErrors[field]) {
         setFieldErrors((prev: any) => ({ ...prev, [field]: undefined }));
+    }
+  };
+
+  const handleCvssClick = () => {
+    if (isEditing) {
+        toggleModal();
     }
   };
 
@@ -70,50 +93,35 @@ const EditVulnerability = () => {
     setStatusMessage(null);
     setFieldErrors({});
 
-    // Basic Validation
     if (!formData.name || !formData.category_of_testing_id) {
-      setStatusMessage({
-        type: "error",
-        text: "Please fill all required fields.",
-      });
+      setStatusMessage({ type: "error", text: "Please fill all required fields." });
       return;
     }
 
     if (!selected_vulnerability?.id) {
-      setStatusMessage({
-        type: "error",
-        text: "No vulnerability selected to update.",
-      });
+      setStatusMessage({ type: "error", text: "No vulnerability selected." });
       return;
     }
 
     try {
       await updateVulnerability({
         id: selected_vulnerability.id,
-        data: formData, // Send the clean formData object
+        data: formData, 
       }).unwrap();
 
-      setStatusMessage({
-        type: "success",
-        text: "Vulnerability updated successfully!",
-      });
+      setStatusMessage({ type: "success", text: "Vulnerability updated successfully!" });
       
-      // Optional: Turn off editing mode on success
       if(isEditing) dispatch(toggleEditing());
       
       setTimeout(() => setStatusMessage(null), 3000);
     } catch (error: any) {
       console.error("Error updating vulnerability:", error);
-
       if (error?.data) {
         setFieldErrors(error.data);
         const detailMsg = error.data.detail || "Failed to update vulnerability.";
         setStatusMessage({ type: "error", text: detailMsg });
       } else {
-        setStatusMessage({
-          type: "error",
-          text: "Something went wrong. Please try again.",
-        });
+        setStatusMessage({ type: "error", text: "Something went wrong." });
       }
     }
   };
@@ -137,11 +145,14 @@ const EditVulnerability = () => {
           />
         </div>
       )}
+
+      <Modal isOpen={isOpen} onClose={closeModal}>
+        <CVSS />
+      </Modal>
       
       <Form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-2">
           
-          {/* Row 1: Name and CVSS */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="name">
@@ -150,7 +161,6 @@ const EditVulnerability = () => {
               <Input
                 type="text"
                 id="name"
-                // Assuming Input returns an Event
                 onChange={(e) => handleChange("name", e.target.value)} 
                 value={formData.name || ""}
                 placeholder="e.g. SQL Injection"
@@ -161,29 +171,33 @@ const EditVulnerability = () => {
             </div>
 
             <div>
-              <Label htmlFor="cvss">CVSS Score</Label>
-              
-              <div className="relative">
-              <Input
-                type="text"
-                id="cvss"
-                className="pl-15"
-                onChange={(e) => handleChange("cvss", e.target.value)}
-                value={formData.cvss || ""}
-                placeholder="e.g. 9.8 (Critical)"
-                disabled={!isEditing}
-                error={!!fieldErrors.cvss}
-                hint={fieldErrors.cvss}
-                
-              />
-            <span className="absolute left-0 top-1/2 -translate-y-1/2 border-r border-gray-200 px-3.5 py-3 text-gray-500 dark:border-gray-800 dark:text-gray-400">
-              <CalenderIcon className="size-6" />
-            </span>
-          </div>
+                <Label htmlFor="cvss">CVSS Score</Label>
+                <div className="relative">
+                    <Input
+                        type="text"
+                        id="cvss"
+                        className="pl-12"
+                        onChange={(e) => handleChange("cvss", e.target.value)}
+                        value={formData.cvss || ""}
+                        disabled={!isEditing}
+                        placeholder="e.g. 9.8 (Critical)"
+                        error={!!fieldErrors.cvss}
+                        hint={fieldErrors.cvss}
+                    />
+                    <span 
+                        role="button"
+                        aria-disabled={!isEditing}
+                        onClick={handleCvssClick} 
+                        className={`absolute left-0 top-0 h-11 w-11 flex items-center justify-center border-r border-gray-200  dark:border-gray-800 
+                            ${isEditing ? "cursor-pointer text-gray-500 hover:bg-gray-50 dark:hover:bg-white/5" : "cursor-not-allowed text-gray-300"}`}
+                        title="Open CVSS Calculator"
+                    >
+                        <CalenderIcon className="size-5" />
+                    </span>
+                </div>
             </div>
           </div>
 
-          {/* Row 2: Category */}
           <div>
             <Label htmlFor="category_of_testing_id">
               Category of Testing <span className="text-red-500">*</span>
@@ -191,24 +205,20 @@ const EditVulnerability = () => {
             <Select
               options={assessment_types || []}
               placeholder="Select category"
-              // Select usually returns the value directly
               onChange={(val) => handleChange("category_of_testing_id", Number(val))}
-              defaultValue={formData.category_of_testing_id}
+              // Fix: Use selected_vulnerability ID for default value matching
+              defaultValue={selected_vulnerability?.category_of_testing?.id || formData.category_of_testing_id}
               disabled={!isEditing}
-              error={!!fieldErrors.category_of_testing_id}
-              hint={fieldErrors.category_of_testing_id}
             />
           </div>
 
-          {/* Row 3: Description */}
           <div>
             <Label htmlFor="description">Description</Label>
             <TextArea
               id="description"
-              // TextArea returns value string directly
               onChange={(val) => handleChange("description", val)}
               value={formData.description || ""}
-              placeholder="Detailed description of the vulnerability..."
+              placeholder="Detailed description..."
               disabled={!isEditing}
               error={!!fieldErrors.description}
               hint={fieldErrors.description}
@@ -216,14 +226,13 @@ const EditVulnerability = () => {
             />
           </div>
 
-          {/* Row 4: Impact */}
           <div>
             <Label htmlFor="impact">Impact</Label>
             <TextArea
               id="impact"
               onChange={(val) => handleChange("impact", val)}
               value={formData.impact || ""}
-              placeholder="What is the business impact?"
+              placeholder="Business impact..."
               disabled={!isEditing}
               error={!!fieldErrors.impact}
               hint={fieldErrors.impact}
@@ -231,14 +240,13 @@ const EditVulnerability = () => {
             />
           </div>
 
-          {/* Row 5: Remediations */}
           <div>
             <Label htmlFor="remediations">Remediations</Label>
             <TextArea
               id="remediations"
               onChange={(val) => handleChange("remediations", val)}
               value={formData.remediations || ""}
-              placeholder="Steps to fix the issue..."
+              placeholder="Steps to fix..."
               disabled={!isEditing}
               error={!!fieldErrors.remediations}
               hint={fieldErrors.remediations}
@@ -246,14 +254,13 @@ const EditVulnerability = () => {
             />
           </div>
 
-          {/* Row 6: Reference */}
           <div>
             <Label htmlFor="reference">References</Label>
             <TextArea
               id="reference"
               onChange={(val) => handleChange("reference", val)}
               value={formData.reference || ""}
-              placeholder="Links to CVEs or documentation..."
+              placeholder="Links to CVEs..."
               disabled={!isEditing}
               error={!!fieldErrors.reference}
               hint={fieldErrors.reference}
@@ -262,11 +269,10 @@ const EditVulnerability = () => {
           </div>
         </div>
 
-        {/* Action Button: Only show when editing */}
         {isEditing && (
             <div className="flex flex-row-reverse mt-10 border-t pt-4">
             <Button disabled={isLoading}>
-                {isLoading ? "Saving..." : "Edit Changes"}
+                {isLoading ? "Saving..." : "Save Changes"}
             </Button>
             </div>
         )}

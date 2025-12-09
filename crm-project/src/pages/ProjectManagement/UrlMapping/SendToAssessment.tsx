@@ -188,7 +188,7 @@ const SendToAssessment: React.FC<SendToAssessmentProps> = ({
         </div>
       )}
       <Form onSubmit={handleSubmit}>
-        <div className="space-y-4 mt-4">
+        <div className="space-y-4 mt-4 p-5">
           <div>
             <Label htmlFor="url">URL</Label>
             <TextArea
@@ -200,6 +200,7 @@ const SendToAssessment: React.FC<SendToAssessmentProps> = ({
               placeholder="https://example.com"
               error={!!errors.url}
               hint={errors.url}
+              disabled={true}
             />
           </div>
 

@@ -1,37 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ComponentCard from "../../components/common/ComponentCard";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableCell,
-  TableRow,
-} from "../../components/ui/table";
-import {
-  useGetAssessmentsQuery,
-  useUpdateAssessmentByIdMutation,
-  useAddAssessmentMutation,
-  useDeleteAssessmentByIdMutation,
-} from "../../service/assessment";
-import { Assessment } from "../../types/assessment";
-import {
-  CheckCircleIcon,
-  CloseIcon,
-  PencilIcon,
-  PlusIcon,
-  TrashBinIcon,
-} from "../../icons";
+import { Table, TableHeader, TableBody, TableCell, TableRow, } from "../../components/ui/table";
+import TableOutlet from "../../components/common/TableOutlet";
+import Alert from "../../components/ui/alert/Alert";
 import Button from "../../components/ui/button/Button";
 import Input from "../../components/form/input/InputField";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  setAssessmentTypes,
-  setRowsPerPage,
-  setCurrentPage,
-} from "../../features/assessment";
-import Alert from "../../components/ui/alert/Alert";
-import TableOutlet from "../../components/common/TableOutlet";
+import { CheckCircleIcon, CloseIcon, PencilIcon, PlusIcon, TrashBinIcon, } from "../../icons";
 import { RootState } from "../../app/store";
+import { Assessment } from "../../types/assessment";
+import { setAssessmentTypes, setRowsPerPage, setCurrentPage, } from "../../features/assessment";
+import { useGetAssessmentsQuery, useUpdateAssessmentByIdMutation, useAddAssessmentMutation, useDeleteAssessmentByIdMutation, } from "../../service/assessment";
 
 const AssessmentType: React.FC = () => {
   const dispatch = useDispatch();

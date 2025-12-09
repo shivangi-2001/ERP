@@ -1,36 +1,16 @@
 import React, { useEffect, useState } from "react";
-import ComponentCard from "../../components/common/ComponentCard";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableCell,
-  TableRow,
-} from "../../components/ui/table";
-import {
-  useUpdateComplianceByIdMutation,
-  useAddComplianceMutation,
-  useDeleteComplianceByIdMutation,
-  useGetComplianceQuery,
-} from "../../service/assessment";
-import { Compliance } from "../../types/assessment";
-import {
-  CheckCircleIcon,
-  CloseIcon,
-  PencilIcon,
-  PlusIcon,
-  TrashBinIcon,
-} from "../../icons";
-import Button from "../../components/ui/button/Button";
-import Input from "../../components/form/input/InputField";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setRowsPerPage,
-  setCurrentPage,
-} from "../../features/assessment";
+import ComponentCard from "../../components/common/ComponentCard";
+import { Table, TableHeader, TableBody, TableCell, TableRow, } from "../../components/ui/table";
 import Alert from "../../components/ui/alert/Alert";
 import TableOutlet from "../../components/common/TableOutlet";
+import Button from "../../components/ui/button/Button";
+import Input from "../../components/form/input/InputField";
+import { CheckCircleIcon, CloseIcon, PencilIcon, PlusIcon, TrashBinIcon, } from "../../icons";
 import { RootState } from "../../app/store";
+import { Compliance } from "../../types/assessment";
+import { setRowsPerPage, setCurrentPage, } from "../../features/assessment";
+import { useUpdateComplianceByIdMutation, useAddComplianceMutation, useDeleteComplianceByIdMutation, useGetComplianceQuery, } from "../../service/assessment";
 
 const ComplianceType = () => {
   const dispatch = useDispatch();

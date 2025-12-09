@@ -1,4 +1,4 @@
-import { Compliance } from "./assessment";
+import { Compliance, Vulnerability } from "./assessment";
 import { Employee } from "./myTeam";
 
 export interface ClientAddress{
@@ -16,8 +16,7 @@ export interface ClientTeam{
     mobile_code: string;
     mobile: string;
     designation?: string;
-    company?: number;
-    company_id?: number;
+    client?: number;
 }
 
 export interface ClientDetail {
@@ -68,6 +67,7 @@ export interface UrlMapping {
   client_assessment_id?: number;
   compliance?: Compliance;
   compliance_id?: number;
+  is_completed: boolean;
 }
 
 export interface UrlMappingType {
@@ -75,4 +75,19 @@ export interface UrlMappingType {
   next: string | null;
   previous: string | null;
   results: UrlMapping[];
+}
+
+export interface Finding {
+  id: number;
+  url?: UrlMapping,
+  vulnerability?: Vulnerability,
+  url_id?: number,
+  vulnerability_id?: number
+}
+
+export interface FindingType {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Finding[];
 }

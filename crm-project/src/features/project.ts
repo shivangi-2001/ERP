@@ -5,6 +5,8 @@ import {
   ClientDetail,
   ClientTeam,
   ClientAssessment,
+  UrlMapping,
+  UrlMappingType
 } from "../types/project";
 
 interface ProjectState {
@@ -19,7 +21,10 @@ interface ProjectState {
   isEditing: boolean;
   isEditingTeam: boolean;
   
-  client_assesment_type: ClientAssessment | undefined;
+  client_assesment_id: ClientAssessment | null;
+
+  urlMappingList: UrlMappingType;
+  url_mapping: UrlMapping | null;
 }
 
 const initialState: ProjectState = {
@@ -36,7 +41,14 @@ const initialState: ProjectState = {
   currentpage: 1,
   isEditing: false,
   isEditingTeam: false,
-  client_assesment_type: undefined,
+  client_assesment_id: null,
+  urlMappingList: {
+    count: 0,
+    next: null,
+    previous: null,
+    results: [],
+  },
+  url_mapping: null,
 };
 
 const projectSlice = createSlice({
@@ -61,7 +73,7 @@ const projectSlice = createSlice({
     },
 
     setClientAssessmentTypeId: (state, action: PayloadAction<ClientAssessment>) => {
-      state.client_assesment_type = action.payload;
+      state.client_assesment_id = action.payload;
     },
     setRowsPerPage: (state, action: PayloadAction<number>) => {
       state.rowperpage = action.payload;
@@ -77,7 +89,13 @@ const projectSlice = createSlice({
 
     toggleEditingTeam: (state) => {
       state.isEditingTeam = !state.isEditingTeam;
-    }
+    },
+    setUrlMappingList: (state, action: PayloadAction<UrlMappingType>) => {
+      state.urlMappingList = action.payload;
+    },
+    setUrlMapping: (state, action: PayloadAction<UrlMapping>) => {
+      state.url_mapping = action.payload;
+    },
   },
 });
 
@@ -89,6 +107,8 @@ export const {
   setRowsPerPage,
   setCurrentPage,
   toggleEditing,
-  toggleEditingTeam
+  toggleEditingTeam,
+  setUrlMapping,
+  setUrlMappingList
 } = projectSlice.actions;
 export default projectSlice.reducer;

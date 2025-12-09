@@ -1,7 +1,9 @@
 from django.shortcuts import render
+from rest_framework import generics
 from rest_framework.viewsets import ModelViewSet
-from .models import ClientDetail, ClientAddress, ClientTeam, ClientAssessmentType, UrlMapping
-from .serializer import ClientDetailSerializer, ClientAddressSerializer, ClientTeamSerializer, ClientAssessmentTypeSerializer, UrlMappingSerializer
+from rest_framework.permissions import IsAuthenticated
+from .models import ClientDetail, ClientAddress, ClientTeam, ClientAssessmentType, UrlMapping, Finding
+from .serializer import ClientDetailSerializer, ClientAddressSerializer, ClientTeamSerializer, ClientAssessmentTypeSerializer, UrlMappingSerializer, FindingSerializer
 from .pagination import GroupedResultsSetPagination, StandardResultsSetPagination, LargeResultsSetPagination
 
 class ClientAddressViewset(ModelViewSet):
@@ -33,8 +35,13 @@ class ClientAssessmentTypeViewSet(ModelViewSet):
     def get_queryset(self):
         queryset = ClientAssessmentType.objects.select_related('assessment_type', 'client').all()
         client_id = self.request.query_params.get('client')
+        assessment_type = self.request.query_params.get("assessment_type")
+        
         if client_id is not None:
             queryset = queryset.filter(client_id=client_id)
+        if assessment_type is not None and assessment_type not in ["" , "null" ,"undefined"]:
+            queryset = queryset.filter(assessment_type__name=assessment_type)
+            
         return queryset
     
 class UrlMappingViewset(ModelViewSet):
@@ -57,5 +64,33 @@ class UrlMappingViewset(ModelViewSet):
             
             
         return queryset
+    
+class InProgresViews(generics.ListAPIView):
+    queryset = UrlMapping.objects.filter(start_date__isnull=False, end_date__isnull=False, qa_date__isnull=False, compliance__isnull=False, tester__isnull=False).select_related('client_assessment', 'tester', 'compliance').all()
+    serializer_class = UrlMappingSerializer
+    pagination_class = LargeResultsSetPagination
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        user = self.request.user
+        queryset = UrlMapping.objects.filter(start_date__isnull=False, end_date__isnull=False, qa_date__isnull=False, compliance__isnull=False, tester_id=user.id).select_related('client_assessment', 'tester', 'compliance').all()
+        return queryset
+    
+    
+class FindingViewset(ModelViewSet):
+    queryset =  Finding.objects.select_related('url', 'vulnerability').all()
+    serializer_class = FindingSerializer
+    pagination_class = StandardResultsSetPagination
+    
+    def get_queryset(self):
+        queryset = Finding.objects.select_related('url', 'vulnerability').all()
+        
+        project_id = self.request.query_params.get('project_id') 
+        
+        if project_id is not None:
+            queryset = queryset.filter(url__id=project_id)
+            
+        return queryset
+    
     
 

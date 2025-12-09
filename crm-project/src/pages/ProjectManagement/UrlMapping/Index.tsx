@@ -14,21 +14,19 @@ import Badge from "../../../components/ui/badge/Badge";
 import TextArea from "../../../components/form/input/TextArea";
 
 // Icons
-import { 
-  PencilIcon, FileIcon, TableIcon, CheckCircleIcon, CloseIcon, 
-  ChevronDownIcon, GroupIcon, PlugInIcon 
-} from "../../../icons";
+import { PencilIcon, FileIcon, TableIcon, CheckCircleIcon, CloseIcon, ChevronDownIcon, GroupIcon, PlugInIcon } from "../../../icons";
 
 // Redux & Services
 import { RootState } from "../../../app/store";
-import { setRowsPerPage, setCurrentPage, setUrlMappingList, setUrlMapping } from "../../../features/urlMapping";
-import { useGetUrlMappingQuery, useEditUrlMappingByIDMutation } from "../../../service/project"; // Assuming you have an edit mutation
+import { setRowsPerPage, setCurrentPage, setUrlMappingList, setUrlMapping } from "../../../features/project";
+import { useGetUrlMappingQuery, useEditUrlMappingByIDMutation, useGetClientAssessmentTypeQuery } from "../../../service/project"; // Assuming you have an edit mutation
 import { useModal } from "../../../hooks/useModal";
 
 // Sub-components
 import UrlMappingForm from "./URL/Form";
 import ViewDetail from "./ViewDetail";
 import SendToAssessment from "./SendToAssessment";
+import { setClientAssessmentTypeId } from "../../../features/project";
 
 const TableTitle = ["URL", "Action"];
 
@@ -38,7 +36,7 @@ const UrlMappingIndex = () => {
   const [searchParams] = useSearchParams();
 
   // Redux State
-  const { clientdetail, client_assesment_type, rowperpage, currentpage } =
+  const { clientdetail, client_assesment_id: client_assesment_type, rowperpage, currentpage } =
     useSelector((state: RootState) => state.project);
 
   // --- Modal & Dropdown State ---
@@ -56,15 +54,15 @@ const UrlMappingIndex = () => {
   const [editUrlValue, setEditUrlValue] = useState<string>("");
   
   // API Mutations
-  const [updateUrlMapping] = useEditUrlMappingByIDMutation(); // Assuming this exists
+  const [updateUrlMapping] = useEditUrlMappingByIDMutation(); 
 
-  const assessmentType = searchParams.get("assessment_type");
+  const query_assessment_type = searchParams.get("assessment_type");
 
-  // Fetch Data
+  // Fetch Data for URL
   const { data: urlMappingList, isLoading } = useGetUrlMappingQuery(
     {
       client_id: Number(id) || clientdetail?.id || 0,
-      assessment_type: client_assesment_type?.assessment_type_name || assessmentType,
+      assessment_type: client_assesment_type?.assessment_type_name || query_assessment_type,
       page: currentpage,
       pageSize: rowperpage,
     },
@@ -74,13 +72,30 @@ const UrlMappingIndex = () => {
     }
   );
 
-  // Sync Data to Redux
   useEffect(() => {
     if (urlMappingList?.count) {
       dispatch(setUrlMappingList(urlMappingList));
       dispatch(setUrlMapping(urlMappingList?.results[0]));
     }
   }, [dispatch, urlMappingList]);
+
+  const {data: client_assessment} = useGetClientAssessmentTypeQuery({
+    client_id: Number(id) || clientdetail?.id || 0,
+    assessment_type: query_assessment_type,
+    page: currentpage,
+    pageSize: rowperpage,
+  },
+  {
+    refetchOnMountOrArgChange: true,
+    skip: !id && !clientdetail?.id,
+  })
+
+  // Sync Data to Redux
+  useEffect(() => {
+    if (client_assessment?.count) {
+      dispatch(setClientAssessmentTypeId(client_assessment?.results[0]));
+    }
+  }, [dispatch, client_assessment]);
 
   // Click Outside Dropdown
   useEffect(() => {
@@ -142,8 +157,8 @@ const UrlMappingIndex = () => {
 
   return (
     <ComponentCard
-      title={`URLs: ${assessmentType || "All Assessments"}`}
-      desc={clientdetail?.name}
+      title={`URLs: ${query_assessment_type || "All Assessments"}`}
+      desc={clientdetail?.name||client_assesment_type?.client_name}
       button={
         <div className="relative inline-block" ref={dropdownRef}>
           <Button variant="primary" onClick={() => setDropOpen(!dropOpen)}>
@@ -249,8 +264,9 @@ const UrlMappingIndex = () => {
 
                     {/* 2. Actions */}
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                      <div className="grid grid-cols-2 gap-2 w-fit">
+                      <div className="flex flex-wrap gap-2 w-fit">
                         {/* View Details */}
+                        <div>
                         <Button
                           size="xs"
                           variant="info"
@@ -259,17 +275,21 @@ const UrlMappingIndex = () => {
                         >
                           Details
                         </Button>
+                        </div>
 
                         {/* SPOC Link */}
+                        <Link to={`/clients/${id}`}>
                         <Badge
                           color="error"
                           variant="light"
                           startIcon={<GroupIcon className="size-4" />}
                         >
-                          <Link to={`/clients/${id}`}>SPOC</Link>
+                          SPOC
                         </Badge>
+                        </Link>
 
                         {/* Send To Assessment */}
+                        <div>
                         <Button
                           size="xs"
                           variant="warning"
@@ -278,8 +298,10 @@ const UrlMappingIndex = () => {
                         >
                           Send to Assessment
                         </Button>
+                        </div>
 
                         {/* Edit (Triggers Inline Edit) */}
+                        <div>
                         <Badge
                           variant="light"
                           color="info"
@@ -288,6 +310,7 @@ const UrlMappingIndex = () => {
                         >
                           Edit
                         </Badge>
+                        </div>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -307,14 +330,10 @@ const UrlMappingIndex = () => {
         </Table>
       </TableOutlet>
 
-      {/* --- MODALS (Placed outside the loop) --- */}
-      
-      {/* 1. Add URL Form */}
       <Modal isOpen={isAddOpen} onClose={closeAddModal} className="max-w-5xl w-full">
         <UrlMappingForm />
       </Modal>
 
-      {/* 2. View Details Modal */}
       <Modal 
         isOpen={openViewModal} 
         onClose={() => setOpenViewModal(false)} 
@@ -323,11 +342,10 @@ const UrlMappingIndex = () => {
         {selectedId && <ViewDetail url_mapping_id={selectedId} />}
       </Modal>
 
-      {/* 3. Send To Assessment Modal */}
       <Modal 
         isOpen={openAssessModal} 
         onClose={() => setOpenAssessModal(false)} 
-        className="max-w-3xl w-full"
+        className="max-w-5xl w-full"
       >
         {selectedId && <SendToAssessment url_mapping_id={selectedId} />}
       </Modal>

@@ -17,8 +17,8 @@ const OnBoardIndex = () => {
       <Card
         title="Client Details"
         desc="On-board clients information"
-        searchInput={true}
-        searchPlaceholder="Search Clients"
+        enableSearch={true}
+        searchPlaceholder="Search by client name e.g: zodox"
         buttonText="New Client"
         buttonStartIcon={<PlusIcon width={19} height={19} />}
         onButtonClick={() => toggleModal()}

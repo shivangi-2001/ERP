@@ -24,6 +24,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { toggleEditing } from "../../../features/project";
 import Alert from "../../../components/ui/alert/Alert";
+import Form from "../../../components/form/Form";
 
 const ClientEdit = () => {
   const dispatch = useDispatch();
@@ -178,9 +179,11 @@ const ClientEdit = () => {
       });
       dispatch(toggleEditing());
     } catch (error: any) {
-      console.log(error)
-      const errorMsg = error.data?.detail || "Failed to update client detail.";
-      setStatusMessage({ type: "error", text: errorMsg });
+      const globalMsg = 
+        error?.data?.detail || 
+        error?.data?.non_field_errors?.[0] || 
+        "Failed to upadate client.";
+      setStatusMessage({ type: "error", text: globalMsg });
       setErrors(error.data);
     }
   };
@@ -192,13 +195,17 @@ const ClientEdit = () => {
   return (
     <ComponentCard
       title="Edit Client Details"
+      desc={`${formData.name}`}
       isEditing={true}
       onEdit={() => dispatch(toggleEditing())}
     >
-      {statusMessage && ( <Alert variant={statusMessage.type} title={`${clientdetail?.name}`} message={statusMessage.text} /> )}
-      <form className="space-y-6" onSubmit={handleSubmit}>
+      {statusMessage && (<div className="mb-4">
+        <Alert variant={statusMessage.type} title={`${clientdetail?.name}`} message={statusMessage.text} />
+      </div> )}
+
+      <Form className="space-y-6 p-5" onSubmit={handleSubmit}>
         {/* Name */}
-        <div>
+        <div className="mb-4">
           <Label htmlFor="name">Company Name</Label>
           <Input
             type="text"
@@ -214,7 +221,7 @@ const ClientEdit = () => {
         </div>
 
         {/* Email */}
-        <div>
+        <div className="mb-4">
           <Label htmlFor="email">Company Email</Label>
           <Input
             type="email"
@@ -231,7 +238,7 @@ const ClientEdit = () => {
         </div>
 
         {/* Phone */}
-        <div>
+        <div className="mb-4">
           <Label>Company Phone</Label>
           <PhoneInput
             countries={getCountryPhoneCodes}
@@ -239,13 +246,14 @@ const ClientEdit = () => {
             defaultNumber={formData.phone || ""}
             onChange={handlePhoneChange}
             disabled={!isEditing}
+            error={!!errors.phone}
             hint={errors.phone}
           />
         </div>
 
         {/* Profile Image - Note: Updating files via JSON won't work easily */}
       
-          <div className="inline-flex gap-3 w-full">
+          <div className="inline-flex gap-3 w-full mb-4 ">
             <img
               src={`/images/user/user-03.jpg`}
               alt={`${formData.id} logo`}
@@ -266,7 +274,7 @@ const ClientEdit = () => {
           </div>
 
         {/* Address Line */}
-        <div>
+        <div className="mb-4">
           <Label htmlFor="address">Company Address</Label>
           <Input
             type="text"
@@ -281,7 +289,7 @@ const ClientEdit = () => {
         </div>
 
         {/* Country & State */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3 mb-4">
           <div>
             <Label htmlFor="country">Country</Label>
             <InputSelect
@@ -312,7 +320,7 @@ const ClientEdit = () => {
         </div>
 
         {/* City & Zip */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3 mb-4">
           <div>
             <Label htmlFor="city">City</Label>
             <InputSelect
@@ -347,7 +355,7 @@ const ClientEdit = () => {
             {isSaving ? "Saving..." : "Edit Changes"}
           </Button>
         </div>
-      </form>
+      </Form>
     </ComponentCard>
   );
 };

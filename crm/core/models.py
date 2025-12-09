@@ -14,7 +14,7 @@ class AssessmentType(models.Model):
     name = models.CharField(max_length=255, unique=True)
     
     def __str__(self):
-        return self.name
+        return f"{self.name}"
 
 class Vulnerabilities(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -30,7 +30,7 @@ class Vulnerabilities(models.Model):
         db_table_comment = "Vulnerabilities list"
         
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.category_of_testing.name}"
         
 
 class TeamsManagement(models.Model):

@@ -1,17 +1,16 @@
-import { useState } from "react"; // 1. Import useState
+import { useState } from "react"; 
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
 import { Table, TableBody, TableCell, TableHeader, TableRow, } from "../../../components/ui/table/index";
-import { useModal } from "../../../hooks/useModal";
 import TableOutlet from "../../../components/common/TableOutlet";
 import Badge from "../../../components/ui/badge/Badge";
 import { Modal } from "../../../components/ui/modal";
-import { useGetClientDetailsQuery } from "../../../service/project";
+import { PlusIcon } from "../../../icons";
+import { useModal } from "../../../hooks/useModal";
 import { RootState } from "../../../app/store";
 import { setClientDetail, setCurrentPage, setRowsPerPage } from "../../../features/project";
-import ClientTeamForm from "../ClientTeam/Form";
-import { PlusIcon } from "../../../icons";
 import ClientAssessmentTypeForm from "../ClientAssessment/Form";
+import ClientTeamForm from "../ClientTeam/Form";
 
 const TableTitle = ["Company Name", "Company Details", "Teams"];
 
@@ -105,11 +104,11 @@ const ClientTable = () => {
                 
                 {/* 3. Update Buttons to use the helper function */}
                 <button onClick={() => handleOpenModal(client, 'team')}>
-                  <Badge variant="light" color="warning" startIcon={<PlusIcon/>}>Team</Badge>
+                  <Badge variant="light" color="warning" startIcon={<PlusIcon className="size-4"/>}>Team</Badge>
                 </button>
 
                 <button onClick={() => handleOpenModal(client, 'assessment')}>
-                  <Badge variant="light" color="primary" startIcon={<PlusIcon/>}>Assessment Type</Badge>
+                  <Badge variant="light" color="primary" startIcon={<PlusIcon className="size-4"/>}>Assessment Type</Badge>
                 </button>
               </TableCell>
             </TableRow>

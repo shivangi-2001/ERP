@@ -40,6 +40,8 @@ import ComplianceType from "./pages/AssestManagement/ComplianceType";
 import TeamGroup from "./pages/TeamManagement/teamGroup";
 import EmployeeIndex from "./pages/TeamManagement/employeeIndex";
 import UrlMappingIndex from "./pages/ProjectManagement/UrlMapping/Index";
+import InProgressIndex from "./pages/InProgress/Index";
+import FindingIndex from "./pages/InProgress/FindingIndex";
 
 
 export default function App() {
@@ -63,19 +65,22 @@ export default function App() {
           {/* Dashboard Layout */}
           <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
-            <Route index path="/" element={<Home />} />
 
             {/* Project Management Pages */}
+            <Route index path="/" element={<OnBoardIndex />} />
             <Route index path="/on-board" element={<OnBoardIndex />} />
             <Route index path="/clients/:id" element={<ClientIDIndex />}/>
             <Route index path="/manage" element={<ManageIndex />} />
             <Route index path="/client/:id" element={<UrlMappingIndex/>} />
             
-            
             {/* Assest Management */}
             <Route  path="/asessment-type" element={<AssessmentType />}/>
             <Route  path="/vulnerabilities" element={<VulnerabilityIndex />}/>
             <Route  path="/compliance-type" element={<ComplianceType />}/>
+
+            {/* Pentest Management */}
+            <Route  path="/in-progress" element={<InProgressIndex />}/>
+            <Route  path="/in-progress/:id" element={<FindingIndex />}/>
 
             {/* Team Management */}
             <Route  path="/teams" element={<TeamGroup />}/>

@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
-from core.models import AssessmentType, CompilanceType
+from core.models import AssessmentType, CompilanceType, Vulnerabilities
 
 TESTER = get_user_model()
 
@@ -63,9 +63,20 @@ class UrlMapping(models.Model):
     client_assessment = models.ForeignKey(ClientAssessmentType, on_delete=models.CASCADE, related_name='urls')
     tester = models.ForeignKey(TESTER, on_delete=models.DO_NOTHING, null=True, blank=True)
     compliance = models.ForeignKey(CompilanceType, on_delete=models.CASCADE, null=True, blank=True)
+    is_completed=models.BooleanField(default=False)
     
     def __str__(self):
-        return f"{self.url} ({self.client})"
+        return f"{self.client_assessment.assessment_type}-{self.url})"
+    
+    
+class Finding(models.Model):
+    url = models.ForeignKey(UrlMapping, related_name="findings", on_delete=models.CASCADE)
+    vulnerability = models.ForeignKey(Vulnerabilities, on_delete=models.SET_NULL, null=True)
+    cvss_score = models.CharField(max_length=255, null=False)
+    
+    class Meta:
+        unique_together = ('url', 'vulnerability', 'cvss_score')
+        
     
     
         

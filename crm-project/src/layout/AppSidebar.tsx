@@ -30,23 +30,21 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  
-  // {
-  //   icon: <CalenderIcon />,
-  //   name: "Pentest Management",
-  //   subItems: [{ name: "In Progress", path: "/on-board", pro: false }, { name: "Completed Pentest", path: "/manage", pro: false }],
-  // },
   {
-    icon: <BoxIcon />,
+    icon: <BoxIcon className="text-blue-900" />,
     name: "Assest Management",
     subItems: [{name: "Assessment Type", path:"/asessment-type"},{ name: "Vulnerabilities", path: "/vulnerabilities", pro: false }, { name: "Compliance type", path: "/compliance-type", pro: false }],
   },
   {
-    icon: <GridIcon />,
+    icon: <GridIcon className="text-rose-800"/>,
     name: "Project Management",
     subItems: [{ name: "On-board Cients", path: "/on-board", pro: false }, { name: "Manage Client", path: "/manage", pro: false }],
   },
-  
+  {
+    icon: <BoltIcon className="text-yellow-600" />,
+    name: "Pentest Management",
+    subItems: [{ name: "In Progress", path: "/in-progress", pro: false }, { name: "Completed Pentest", path: "/completed-projects", pro: false }],
+  },
 ];
 
 const othersItems: NavItem[] = [
@@ -58,34 +56,6 @@ const othersItems: NavItem[] = [
       { name: "Employee", path: "/employee", pro: false },
     ],
   },
-  {
-    icon: <PieChartIcon />,
-    name: "Charts",
-    subItems: [
-      { name: "Line Chart", path: "/line-chart", pro: false },
-      { name: "Bar Chart", path: "/bar-chart", pro: false },
-    ],
-  },
-  {
-    icon: <BoxCubeIcon />,
-    name: "UI Elements",
-    subItems: [
-      { name: "Alerts", path: "/alerts", pro: false },
-      { name: "Avatar", path: "/avatars", pro: false },
-      { name: "Badge", path: "/badge", pro: false },
-      { name: "Buttons", path: "/buttons", pro: false },
-      { name: "Images", path: "/images", pro: false },
-      { name: "Videos", path: "/videos", pro: false },
-    ],
-  },
-  {
-    icon: <PlugInIcon />,
-    name: "Authentication",
-    subItems: [
-      { name: "Sign In", path: "/signin", pro: false },
-      { name: "Sign Up", path: "/signup", pro: false },
-    ],
-  }
 ];
 
 const AppSidebar: React.FC = () => {

@@ -128,7 +128,7 @@
         "designation": "SDE",
         "mobile_code": "91",
         "mobile": "1277461287",
-        "company": 1
+        "client": 1
     }
 },
 {
@@ -140,7 +140,7 @@
         "designation": "SDE 2",
         "mobile_code": "91",
         "mobile": "28782478",
-        "company": 1
+        "client": 1
     }
 },
 {
@@ -152,7 +152,7 @@
         "designation": "Security",
         "mobile_code": "45",
         "mobile": "28978912839",
-        "company": 2
+        "client": 2
     }
 },
 {
@@ -164,7 +164,7 @@
         "designation": "SDE",
         "mobile_code": "45",
         "mobile": "21874871243",
-        "company": 2
+        "client": 2
     }
 },
 {
@@ -176,7 +176,7 @@
         "designation": "SDE",
         "mobile_code": "45",
         "mobile": "989898343",
-        "company": 2
+        "client": 2
     }
 },
 {
@@ -188,7 +188,7 @@
         "designation": "Penetester",
         "mobile_code": "995",
         "mobile": "892719878",
-        "company": 4
+        "client": 4
     }
 },
 {
@@ -200,7 +200,7 @@
         "designation": "SDE",
         "mobile_code": "+91",
         "mobile": "8378943233",
-        "company": 4
+        "client": 4
     }
 },
 {
@@ -212,7 +212,7 @@
         "designation": "SDE",
         "mobile_code": "31",
         "mobile": "87621873214",
-        "company": 3
+        "client": 3
     }
 },
 {
@@ -224,7 +224,7 @@
         "designation": "Software",
         "mobile_code": "31",
         "mobile": "2149873849",
-        "company": 3
+        "client": 3
     }
 },
 {
@@ -236,7 +236,7 @@
         "designation": "SDE2",
         "mobile_code": "31",
         "mobile": "13432343",
-        "company": 3
+        "client": 3
     }
 },
 {
@@ -248,7 +248,7 @@
         "designation": "Pentester",
         "mobile_code": "46",
         "mobile": "1242144",
-        "company": 5
+        "client": 5
     }
 },
 {
@@ -260,7 +260,7 @@
         "designation": "Secuirty",
         "mobile_code": "46",
         "mobile": "241254325",
-        "company": 5
+        "client": 5
     }
 },
 {

@@ -86,7 +86,7 @@ const ViewDetail: React.FC<ViewDetailProps> = ({ url_mapping_id }) => {
 
   return (
     <ComponentCard title="View URL Details">
-      <div className="space-y-4 mt-4">
+      <div className="space-y-4 mt-4 p-5">
         <div>
           <Label htmlFor="url">URL</Label>
           <TextArea
