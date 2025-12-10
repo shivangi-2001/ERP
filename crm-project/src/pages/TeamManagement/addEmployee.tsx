@@ -135,8 +135,7 @@ const AddEmployee = () => {
         </div>
       )}
       
-      <Form onSubmit={handleSubmit}>
-        <div className="space-y-6">
+      <Form onSubmit={handleSubmit} className="space-y-6 p-5">
           {/* Email */}
           <div>
             <Label htmlFor="email">
@@ -276,9 +275,6 @@ const AddEmployee = () => {
             />
             </div>
           </div>
-
-        
-        </div>
 
         {/* Submit button */}
         <div className="flex flex-row-reverse mt-10 py-3">

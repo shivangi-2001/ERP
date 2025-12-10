@@ -16,6 +16,7 @@ const ClientTeamEdit: React.FC = () => {
 
   const [editClientTeam, { isLoading }] = useEditClientTeamMutation();
 
+  const [errors, setErrors] = useState<any>({});
   const [statusMessage, setStatusMessage] = useState<{
     type: "success" | "error";
     text: string;
@@ -89,9 +90,13 @@ const ClientTeamEdit: React.FC = () => {
       
 
     } catch (error: any) {
-      console.error("Submission Error:", error);
-      const errorMsg = error.data?.detail || "Failed to update member.";
-      setStatusMessage({ type: "error", text: errorMsg });
+      const globalMsg = 
+        error?.data?.detail || 
+        error?.data?.non_field_errors?.[0] || 
+        "Failed to add client team member.";
+      setStatusMessage({ type: "error", text: globalMsg });
+      setErrors(error.data);
+
     }
   };
 
@@ -113,6 +118,8 @@ const ClientTeamEdit: React.FC = () => {
             value={formData.name}
             onChange={handleInputChange}
             placeholder="Enter name"
+            error={!!errors.name}
+            hint={errors.name}
             required
           />
         </div>
@@ -126,6 +133,8 @@ const ClientTeamEdit: React.FC = () => {
             placeholder="personal_email@gmail.com"
             value={formData.email}
             onChange={handleInputChange}
+            error={!!errors.email}
+            hint={errors.email}
             required
           />
         </div>
@@ -139,6 +148,8 @@ const ClientTeamEdit: React.FC = () => {
             defaultCode={formData.mobile_code}
             defaultNumber={formData.mobile}
             onChange={handlePhoneChange}
+            error={!!errors.mobile}
+            hint={errors.mobile}
           />
         </div>
 
@@ -151,6 +162,8 @@ const ClientTeamEdit: React.FC = () => {
             placeholder="e.g. DevSecOps Engineer"
             value={formData.designation}
             onChange={handleInputChange}
+            error={!!errors.designation}
+            hint={errors.designation}
             required
           />
         </div>

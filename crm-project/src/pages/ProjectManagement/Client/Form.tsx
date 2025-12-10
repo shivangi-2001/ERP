@@ -138,11 +138,13 @@ const ClientForm = () => {
       await createClientDetail(payload).unwrap();
       console.log("Client Created Successfully");
       navigate("/on-board");
-    } catch (err: any) {
-      console.error("Failed to create client:", err);
-      if (err?.data) {
-        setErrors(err.data);
-      }
+    } catch (error: any) {
+      const globalMsg = 
+      error?.data?.detail || 
+      error?.data?.non_field_errors?.[0] || 
+      "Failed to upadate client.";
+    // setStatusMessage({ type: "error", text: globalMsg });
+    setErrors(error.data);
     }
   };
 

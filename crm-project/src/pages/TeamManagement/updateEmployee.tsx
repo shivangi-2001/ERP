@@ -116,8 +116,7 @@ const UpdateEmployee = () => {
           message={statusMessage.text}
         />
       )}
-      <Form onSubmit={handleSubmit}>
-        <div className="space-y-6">
+      <Form onSubmit={handleSubmit} className="space-y-6 p-5">
           {/* Email */}
           <div>
             <Label htmlFor="email">
@@ -242,10 +241,9 @@ const UpdateEmployee = () => {
               />
             </div>
           </div>
-        </div>
 
         {/* Submit */}
-        <div className="flex flex-row-reverse mt-10 py-3">
+        {isEditing && <div className="flex flex-row-reverse mt-10 py-3">
           <Button
             variant="primary"
             disabled={isLoading}
@@ -253,7 +251,7 @@ const UpdateEmployee = () => {
           >
             {isLoading ? "Updating..." : "Update Employee"}
           </Button>
-        </div>
+        </div>}
       </Form>
     </ComponentCard>
   );

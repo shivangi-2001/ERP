@@ -22,9 +22,10 @@ const FindingTable = () => {
   const totalRows = findings?.count || 0;
   const IndexofFirstItem = (currentpage - 1) * rowperpage + 1;
   const IndexofLastItem = Math.min(currentpage * rowperpage, totalRows);
+
   return (
     <TableOutlet
-      title={``}
+      title="List of findings"
       pageSizeOptions={[10, 20, 25, 30]}
       setRowsPerPage={(rows) => dispatch(setRowsPerPage(rows))}
       totalRows={totalRows}

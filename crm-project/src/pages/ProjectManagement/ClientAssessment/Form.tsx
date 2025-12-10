@@ -86,8 +86,11 @@ const ClientAssessmentTypeForm: React.FC = () => {
             setStatus({ type: 'success', message: "Assessments updated successfully!" });
 
         } catch (error: any) {
-            console.error(error);
-            setStatus({ type: 'error', message: "Failed to update assessments." });
+            const globalMsg = 
+            error?.data?.detail || 
+            error?.data?.non_field_errors?.[0] || 
+            "Failed to upadate assessment.";
+            setStatus({ type: "error", message: globalMsg });
         }
     };
 

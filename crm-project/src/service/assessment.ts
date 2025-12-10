@@ -71,7 +71,7 @@ export const assessmentApi = createApi({
     }),
 
     // search vulnerability
-    searchVulnerability: builder.query<VulnerabilityType,{assessment_type: string|null, search_text:string|null}>({
+    searchVulnerability: builder.query<VulnerabilityType,{assessment_type: string|null|undefined, search_text:string|null|undefined}>({
       query: ({assessment_type, search_text}) => `vulnerabilities?assessment_type=${assessment_type}&name=${search_text}`,
       providesTags: ["vulnerabilities"],
     }), 
@@ -150,6 +150,7 @@ export const {
   useAddVulnerabilityMutation,
   useGetVulnerabilitiesQuery,
   useGetVulnerabilityByIdQuery,
+  useSearchVulnerabilityQuery,
   useUpdateVulnerabilityByIdMutation,
   useDeleteVulnerabilityByIdMutation,
 

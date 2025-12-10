@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import Button from "../ui/button/Button";
 
 export interface SearchResultItem {
-  id: string | number;
+  id?: string | number;
   label: string;
   value?: any;
 }
@@ -16,7 +16,6 @@ interface CardProps {
   // Search Input Props
   enableSearch?: boolean;
   searchValue?: string;
-  // Standardizing on passing the event
   onSearchChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   searchResults?: SearchResultItem[]; 
   onSearchSelect?: (item: SearchResultItem) => void;

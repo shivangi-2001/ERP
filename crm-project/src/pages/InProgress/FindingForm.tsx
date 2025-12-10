@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import Card from "../../components/common/Card";
 import Form from "../../components/form/Form";
@@ -7,12 +7,12 @@ import Label from "../../components/form/Label";
 import Alert from "../../components/ui/alert/Alert";
 import { Modal } from "../../components/ui/modal";
 import Select from "../../components/form/Select";
-import Button from "../../components/ui/button/Button";
 import TextArea from "../../components/form/input/TextArea";
 import { CalenderIcon } from "../../icons";
 import { useModal } from "../../hooks/useModal";
 import { RootState } from "../../app/store";
 import { Vulnerability } from "../../types/assessment";
+import { useSearchVulnerabilityQuery } from "../../service/assessment";
 
 import CVSS from "../AssestManagement/CVSS/Index";
 
@@ -20,9 +20,8 @@ const FindingForm = () => {
   const { isOpen, closeModal, toggleModal } = useModal();
 
   const { baseScore, severity } = useSelector((state: RootState) => state.cvss);
-  const { assessment_types } = useSelector(
-    (state: RootState) => state.assessment
-  );
+  const { assessment_types } = useSelector((state: RootState) => state.assessment);
+  const { url_mapping } = useSelector((state: RootState) => state.project);
 
   const initialFormState: Partial<Vulnerability> = {
     name: "",
@@ -33,13 +32,9 @@ const FindingForm = () => {
     cvss: "",
     category_of_testing_id: 0,
   };
-  const [statusMessage, setStatusMessage] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
+  const [statusMessage, setStatusMessage] = useState<{ type: "success" | "error"; text: string;} | null>(null);
 
-  const [formData, setFormData] =
-    useState<Partial<Vulnerability>>(initialFormState);
+  const [formData, setFormData] = useState<Partial<Vulnerability>>(initialFormState);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -58,8 +53,48 @@ const FindingForm = () => {
       setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
+
+  const [searchValue, setSearchValue] = useState<string>("");
+
+  const {data:searchVulnerability, } = useSearchVulnerabilityQuery({
+    assessment_type:url_mapping?.client_assessment?.assessment_type_name,
+    search_text:searchValue
+  }, {skip: !searchValue});
+
+  const searchOption = useMemo(()=> {
+    return searchVulnerability?.results.map((search: any) => (console.log(search),{
+      label: search.name,
+      value: search.id
+    }))||[];
+  }, [searchVulnerability?.results])
+
+  const handleSearchSelect = (selectedItem: any) => {
+    const selectedVuln = searchVulnerability?.results.find((v: any) => v.id === selectedItem.value);
+    
+    if (selectedVuln) {
+      setFormData({
+        name: selectedVuln.name,
+        description: selectedVuln.description,
+        impact: selectedVuln.impact,
+        remediations: selectedVuln.remediations,
+        reference: selectedVuln.reference,
+        cvss: selectedVuln.cvss, // Check if your API returns this string
+        category_of_testing_id: selectedVuln.category_of_testing_id || 0,
+      });
+      setSearchValue(""); 
+    }
+  };
+
   return (
-    <Card title="" enableSearch={true}>
+    <Card 
+      title="" 
+      enableSearch={true}
+      searchValue={searchValue}
+      searchResults={searchOption}
+      onSearchChange={(e: any) => setSearchValue(e.target.value)}
+      onSearchSelect={handleSearchSelect}
+    >
+     
       {statusMessage && (
         <div className="mb-4">
           <Alert
