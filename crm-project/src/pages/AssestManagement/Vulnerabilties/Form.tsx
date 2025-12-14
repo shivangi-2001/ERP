@@ -11,7 +11,7 @@ import TextArea from "../../../components/form/input/TextArea";
 import { RootState } from "../../../app/store";
 import { Vulnerability } from "../../../types/assessment";
 import { useAddVulnerabilityMutation } from "../../../service/assessment";
-import { CalenderIcon } from "../../../icons"; // You might want to rename this icon if it's a Calculator
+import { CalenderIcon } from "../../../icons";
 import { useModal } from "../../../hooks/useModal";
 import { Modal } from "../../../components/ui/modal";
 import CVSS from "../CVSS/Index";
@@ -112,7 +112,7 @@ const VulnerabilityForm = () => {
     <ComponentCard title="Add Vulnerability" className="h-fit">
       
       {statusMessage && (
-        <div className="mb-4">
+        <div className="mb-4 p-5">
           <Alert
             variant={statusMessage.type}
             title={statusMessage.type === "success" ? "Success" : "Error"}
@@ -126,8 +126,7 @@ const VulnerabilityForm = () => {
         <CVSS />
       </Modal>
 
-      <Form onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-5">
+      <Form onSubmit={handleSubmit} className="space-y-6 p-5">
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -180,8 +179,6 @@ const VulnerabilityForm = () => {
               onChange={(val) => handleChange("category_of_testing_id", Number(val))}
               defaultValue={formData.category_of_testing_id}
               disabled={false}
-              error={!!errors.category_of_testing_id}
-              hint={errors.category_of_testing_id}
             />
           </div>
 
@@ -240,7 +237,6 @@ const VulnerabilityForm = () => {
               rows={2}
             />
           </div>
-        </div>
 
         <div className="flex flex-row-reverse mt-10 border-t pt-4">
           <Button disabled={isLoading}>

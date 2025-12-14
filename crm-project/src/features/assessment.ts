@@ -29,7 +29,7 @@ const initialState: AssetState = {
 };
 
 const assestSlice = createSlice({
-  name: "asset",
+  name: "assessment",
   initialState,
   reducers: {
     setAssessmentTypes: (state, action: PayloadAction<AssetOption[]>) => {

@@ -78,7 +78,6 @@ const UpdateEmployee = () => {
         !(typeof value === "object" && Object.keys(value).length === 0)
       ) {
         payload[key] = value;
-        console.log("key", key);
       }
     });
 
@@ -110,148 +109,152 @@ const UpdateEmployee = () => {
       onEdit={() => dispatch(toggleEditing())}
     >
       {statusMessage && (
-        <Alert
-          variant={statusMessage.type}
-          title={`${formData?.email}`}
-          message={statusMessage.text}
-        />
+        <div className="mb-6 p-5">
+          <Alert
+            variant={statusMessage.type}
+            title={formData.email}
+            message={statusMessage.text}
+          />
+        </div>
       )}
       <Form onSubmit={handleSubmit} className="space-y-6 p-5">
-          {/* Email */}
-          <div>
-            <Label htmlFor="email">
-              Email <span className="text-error-500">*</span>
-            </Label>
+        {/* Email */}
+        <div>
+          <Label htmlFor="email">
+            Email <span className="text-error-500">*</span>
+          </Label>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="employee@company.com"
+            value={formData.email || ""}
+            onChange={handleChange}
+            disabled={!isEditing}
+            required
+          />
+          {error.email && (
+            <p className="text-error-500 text-sm">{error.email}</p>
+          )}
+        </div>
+
+        {/* Password (optional) */}
+        <div>
+          <Label>Password (leave blank to keep current)</Label>
+          <div className="relative">
             <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="employee@company.com"
-              value={formData.email || ""}
+              type={showPassword ? "text" : "password"}
+              placeholder="Enter new password"
+              name="password"
+              value={formData.password || ""}
               onChange={handleChange}
               disabled={!isEditing}
-              required
             />
-            {error.email && (
-              <p className="text-error-500 text-sm">{error.email}</p>
-            )}
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+            >
+              {showPassword ? (
+                <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+              ) : (
+                <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+              )}
+            </span>
           </div>
+          {error.password && (
+            <p className="text-error-500 text-sm">{error.password}</p>
+          )}
+        </div>
 
-          {/* Password (optional) */}
-          <div>
-            <Label>Password (leave blank to keep current)</Label>
-            <div className="relative">
-              <Input
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter new password"
-                name="password"
-                value={formData.password || ""}
-                onChange={handleChange}
-                disabled={!isEditing}
-              />
-              <span
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
-              >
-                {showPassword ? (
-                  <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                ) : (
-                  <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                )}
-              </span>
-            </div>
-            {error.password && (
-              <p className="text-error-500 text-sm">{error.password}</p>
-            )}
-          </div>
-
-          {/* Names */}
-          <div className="flex flex-row gap-2">
-            <div className="w-1/2">
-              <Label htmlFor="first_name">First Name</Label>
-              <Input
-                id="first_name"
-                name="first_name"
-                placeholder="John"
-                value={formData.first_name || ""}
-                onChange={handleChange}
-                disabled={!isEditing}
-              />
-            </div>
-            <div className="w-1/2">
-              <Label htmlFor="last_name">Last Name</Label>
-              <Input
-                id="last_name"
-                name="last_name"
-                placeholder="Doe"
-                value={formData.last_name || ""}
-                onChange={handleChange}
-                disabled={!isEditing}
-              />
-            </div>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <Label htmlFor="contact_number">Contact Number</Label>
+        {/* Names */}
+        <div className="flex flex-row gap-2">
+          <div className="w-1/2">
+            <Label htmlFor="first_name">First Name</Label>
             <Input
-              id="contact_number"
-              name="contact_number"
-              placeholder="+91 9876543210"
-              value={formData.contact_number || ""}
+              id="first_name"
+              name="first_name"
+              placeholder="John"
+              value={formData.first_name || ""}
               onChange={handleChange}
               disabled={!isEditing}
             />
           </div>
-
-          {/* Designation */}
-          <div>
-            <Label htmlFor="designation">Designation</Label>
+          <div className="w-1/2">
+            <Label htmlFor="last_name">Last Name</Label>
             <Input
-              id="designation"
-              name="designation"
-              placeholder="Software Engineer"
-              value={formData.designation || ""}
+              id="last_name"
+              name="last_name"
+              placeholder="Doe"
+              value={formData.last_name || ""}
               onChange={handleChange}
               disabled={!isEditing}
             />
           </div>
+        </div>
 
-          <div className="flex flex-row justify-between items-end gap-4">
-            <div className="w-1/3 pb-3">
-              {/* pb-3 adds a little spacing so the checkbox aligns perfectly with the text inside the input, not just the bottom border */}
-              <Checkbox
-                id="is_active"
-                label="Account active"
-                checked={formData.is_active ?? true}
-                onChange={(checked) =>
-                  setFormData((prev: any) => ({ ...prev, is_active: checked }))
-                }
-              />
-            </div>
+        {/* Contact */}
+        <div>
+          <Label htmlFor="contact_number">Contact Number</Label>
+          <Input
+            id="contact_number"
+            name="contact_number"
+            placeholder="+91 9876543210"
+            value={formData.contact_number || ""}
+            onChange={handleChange}
+            disabled={!isEditing}
+          />
+        </div>
 
-            <div className="w-2/3">
-              <Label htmlFor="team_id">Team</Label>
-              <Select
-                defaultValue={formData.team_id?.toString() || ""}
-                onChange={handleSelect}
-                options={team_groups}
-                placeholder="Select Team"
-                disabled={!isEditing}
-              />
-            </div>
+        {/* Designation */}
+        <div>
+          <Label htmlFor="designation">Designation</Label>
+          <Input
+            id="designation"
+            name="designation"
+            placeholder="Software Engineer"
+            value={formData.designation || ""}
+            onChange={handleChange}
+            disabled={!isEditing}
+          />
+        </div>
+
+        <div className="flex flex-row justify-between items-end gap-4">
+          <div className="w-1/3 pb-3">
+            {/* pb-3 adds a little spacing so the checkbox aligns perfectly with the text inside the input, not just the bottom border */}
+            <Checkbox
+              id="is_active"
+              label="Account active"
+              checked={formData.is_active ?? true}
+              onChange={(checked) =>
+                setFormData((prev: any) => ({ ...prev, is_active: checked }))
+              }
+            />
           </div>
+
+          <div className="w-2/3">
+            <Label htmlFor="team_id">Team</Label>
+            <Select
+              defaultValue={formData.team_id?.toString() || ""}
+              onChange={handleSelect}
+              options={team_groups}
+              placeholder="Select Team"
+              disabled={!isEditing}
+            />
+          </div>
+        </div>
 
         {/* Submit */}
-        {isEditing && <div className="flex flex-row-reverse mt-10 py-3">
-          <Button
-            variant="primary"
-            disabled={isLoading}
-            className="w-full sm:w-auto"
-          >
-            {isLoading ? "Updating..." : "Update Employee"}
-          </Button>
-        </div>}
+        {isEditing && (
+          <div className="flex flex-row-reverse mt-10 py-3">
+            <Button
+              variant="primary"
+              disabled={isLoading}
+              className="w-full sm:w-auto"
+            >
+              {isLoading ? "Updating..." : "Update Employee"}
+            </Button>
+          </div>
+        )}
       </Form>
     </ComponentCard>
   );

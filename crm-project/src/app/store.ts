@@ -12,24 +12,35 @@ import { projectApi } from '../service/project'
 import myTeamReducer from "../features/myTeam"
 import { myTeamApi } from '../service/myTeam'
 
+import pentestReducer from '../features/pentest'
+import { pentestApi } from '../service/pentest'
+
 export const store = configureStore({
   reducer: {
-    assessment: assestReducer,
-    cvss: cvssReducer,
-    myTeam: myTeamReducer,
-    project: projectReducer,
     auth: authReducer,
-    [projectApi.reducerPath]: projectApi.reducer,
-    [assessmentApi.reducerPath]: assessmentApi.reducer,
-    [myTeamApi.reducerPath]: myTeamApi.reducer,
+    
+    cvss: cvssReducer,
+    assessment: assestReducer,
+    
+    project: projectReducer,
+    
+    myTeam: myTeamReducer,
+
+    pentest: pentestReducer,
+    
     [authApi.reducerPath]: authApi.reducer,
+    [assessmentApi.reducerPath]: assessmentApi.reducer,
+    [projectApi.reducerPath]: projectApi.reducer,
+    [myTeamApi.reducerPath]: myTeamApi.reducer,
+    [pentestApi.reducerPath]: pentestApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
-      projectApi.middleware,
-      assessmentApi.middleware,
-      myTeamApi.middleware,
       authApi.middleware, 
+      assessmentApi.middleware,
+      projectApi.middleware,
+      myTeamApi.middleware,
+      pentestApi.middleware
     ),
 })
 

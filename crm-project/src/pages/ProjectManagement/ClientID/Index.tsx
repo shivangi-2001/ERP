@@ -1,19 +1,22 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router"; // or "react-router-dom" depending on version
+import { useParams } from "react-router"; 
 import PageMeta from "../../../components/common/PageMeta";
-import ClientEdit from "./Edit";
-import ClientTeamForm from "../ClientTeam/Form";
-import ClientTeamTable from "../ClientTeam/Table";
-import { useGetClientDetailQuery } from "../../../service/project";
-import { setClientDetail } from "../../../features/project";
+
 import { RootState } from "../../../app/store";
-import ClientTeamEdit from "../ClientTeam/Edit";
-import ClientAssessmentTypeForm from "../ClientAssessment/Form";
+import { setClientDetail } from "../../../features/project";
+import { useGetClientDetailQuery } from "../../../service/project";
+
+import ClientEdit from "./ClientEdit";
+import ClientTeamForm from "../ClientTeam/ClientTeamForm";
+import ClientTeamTable from "../ClientTeam/ClientTable";
+import ClientTeamEdit from "../ClientTeam/ClientTeamEdit";
+import ClientAssessmentTypeForm from "../../PentestManagement/ClientAssessment/Form";
 
 const ClientIDIndex = () => {
     const { id } = useParams<{ id: string }>(); 
     const dispatch = useDispatch();
+    
     const { isEditingTeam } = useSelector((state:RootState) => state.project)
 
     const { data, isLoading } = useGetClientDetailQuery(id, { skip: !id });

@@ -1,11 +1,10 @@
 import React from "react";
-import { RootState } from "../../../app/store";
-import { useGetClientAssessmentTypeQuery } from "../../../service/project";
+import { Link } from "react-router"; 
 import { useDispatch, useSelector } from "react-redux";
 import ComponentCard from "../../../components/common/ComponentCard";
-import { Link } from "react-router"; 
-import { setAssessmentTypeId } from "../../../features/assessment";
-import { setClientAssessmentTypeId } from "../../../features/project";
+import { RootState } from "../../../app/store";
+import { setClientAssessmentTypeId } from "../../../features/pentest";
+import { useGetClientAssessmentTypeQuery } from "../../../service/pentest";
 
 interface SelectAssessmentTypeProps {
   ClientID: number;
@@ -17,16 +16,14 @@ const colorVariants = [
   "bg-yellow-100 text-yellow-700 ring-yellow-300 hover:bg-yellow-300",
   "bg-pink-100 text-pink-700 ring-pink-300 hover:bg-pink-300",
   "bg-green-100 text-green-700 ring-green-300 hover:bg-green-300",
-  "bg-orange-100 text-orange-700 ring-orange-300 hover:bg-orange-300",
+  "bg-sky-100 text-sky-700 ring-sky-300 hover:bg-sky-300",
   "bg-purple-100 text-purple-700 ring-purple-300 hover:bg-purple-300",
   "bg-indigo-100 text-indigo-700 ring-indigo-300 hover:bg-indigo-300",
 ];
 
 const SelectAssessmentType: React.FC<SelectAssessmentTypeProps> = ({ ClientID }) => {
     const dispatch = useDispatch();
-  const { rowperpage, currentpage } = useSelector(
-    (state: RootState) => state.project
-  );
+  const { rowperpage, currentpage } = useSelector((state: RootState) => state.project);
 
   const { data, isLoading } = useGetClientAssessmentTypeQuery({
     client_id: ClientID,

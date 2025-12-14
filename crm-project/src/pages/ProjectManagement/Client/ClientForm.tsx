@@ -1,7 +1,5 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
-import { useCreateClientDetailMutation } from "../../../service/project";
-import { ClientDetail } from "../../../types/project";
 import ComponentCard from "../../../components/common/ComponentCard";
 import PhoneInput from "../../../components/form/group-input/PhoneInput";
 import FileInput from "../../../components/form/input/FileInput";
@@ -9,6 +7,8 @@ import Input from "../../../components/form/input/InputField";
 import InputSelect from "../../../components/form/InputSelect";
 import Label from "../../../components/form/Label";
 import Button from "../../../components/ui/button/Button";
+import { ClientDetail } from "../../../types/project";
+import { useCreateClientDetailMutation } from "../../../service/project";
 import { getAllCountries, getUniquePhoneCodes, getStatesByCountryName, getCitiesByStateName, getCountryDataByIso, LocationOption } from "../../../utils/location"; 
 
 const ClientForm = () => {

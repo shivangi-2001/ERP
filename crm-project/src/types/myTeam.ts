@@ -17,7 +17,7 @@ export interface Employee {
   last_name: string;
   contact_number: string;
   password?: string;
-  designation: string;
+  designation?: string;
   team?: Team;
   team_id?: number;
   is_active: boolean;

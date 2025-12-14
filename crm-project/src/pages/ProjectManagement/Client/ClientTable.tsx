@@ -9,8 +9,8 @@ import { PlusIcon } from "../../../icons";
 import { useModal } from "../../../hooks/useModal";
 import { RootState } from "../../../app/store";
 import { setClientDetail, setCurrentPage, setRowsPerPage } from "../../../features/project";
-import ClientAssessmentTypeForm from "../ClientAssessment/Form";
-import ClientTeamForm from "../ClientTeam/Form";
+import ClientAssessmentTypeForm from "../../PentestManagement/ClientAssessment/Form";
+import ClientTeamForm from "../ClientTeam/ClientTeamForm";
 
 const TableTitle = ["Company Name", "Company Details", "Teams"];
 
@@ -107,7 +107,7 @@ const ClientTable = () => {
                   <Badge variant="light" color="warning" startIcon={<PlusIcon className="size-4"/>}>Team</Badge>
                 </button>
 
-                <button onClick={() => handleOpenModal(client, 'assessment')}>
+                <button type="button" onClick={() => handleOpenModal(client, 'assessment')}>
                   <Badge variant="light" color="primary" startIcon={<PlusIcon className="size-4"/>}>Assessment Type</Badge>
                 </button>
               </TableCell>

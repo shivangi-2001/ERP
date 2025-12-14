@@ -1,13 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  ClientDetails,
-  ClientAddress,
-  ClientDetail,
-  ClientTeam,
-  ClientAssessment,
-  UrlMapping,
-  UrlMappingType
-} from "../types/project";
+import { ClientDetails, ClientAddress, ClientDetail, ClientTeam } from "../types/project";
 
 interface ProjectState {
   clientdetails: ClientDetails;
@@ -18,13 +10,9 @@ interface ProjectState {
 
   rowperpage: number;
   currentpage: number;
+
   isEditing: boolean;
   isEditingTeam: boolean;
-  
-  client_assesment_id: ClientAssessment | null;
-
-  urlMappingList: UrlMappingType;
-  url_mapping: UrlMapping | null;
 }
 
 const initialState: ProjectState = {
@@ -37,22 +25,14 @@ const initialState: ProjectState = {
   clientdetail: null,
   clientaddress: null,
   clientteam: null,
-  rowperpage: 5,
+  rowperpage: 10,
   currentpage: 1,
   isEditing: false,
   isEditingTeam: false,
-  client_assesment_id: null,
-  urlMappingList: {
-    count: 0,
-    next: null,
-    previous: null,
-    results: [],
-  },
-  url_mapping: null,
 };
 
 const projectSlice = createSlice({
-  name: "asset",
+  name: "project",
   initialState,
   reducers: {
     setClientDetails: (state, action: PayloadAction<ClientDetails>) => {
@@ -72,9 +52,6 @@ const projectSlice = createSlice({
       state.clientteam = action.payload;
     },
 
-    setClientAssessmentTypeId: (state, action: PayloadAction<ClientAssessment>) => {
-      state.client_assesment_id = action.payload;
-    },
     setRowsPerPage: (state, action: PayloadAction<number>) => {
       state.rowperpage = action.payload;
     },
@@ -90,12 +67,7 @@ const projectSlice = createSlice({
     toggleEditingTeam: (state) => {
       state.isEditingTeam = !state.isEditingTeam;
     },
-    setUrlMappingList: (state, action: PayloadAction<UrlMappingType>) => {
-      state.urlMappingList = action.payload;
-    },
-    setUrlMapping: (state, action: PayloadAction<UrlMapping>) => {
-      state.url_mapping = action.payload;
-    },
+
   },
 });
 
@@ -103,12 +75,9 @@ export const {
   setClientDetail,
   setClientDetails,
   setClientTeam,
-  setClientAssessmentTypeId,
   setRowsPerPage,
   setCurrentPage,
   toggleEditing,
   toggleEditingTeam,
-  setUrlMapping,
-  setUrlMappingList
 } = projectSlice.actions;
 export default projectSlice.reducer;

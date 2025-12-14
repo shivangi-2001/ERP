@@ -93,8 +93,15 @@ const AssessmentType: React.FC = () => {
         text: "Added successfully!",
       });
     } catch (error: any) {
-      const errorMsg = error.data?.detail || "Failed to added assessment.";
-      setStatusMessage({ type: "error", text: errorMsg });
+      if (error?.data) {
+        const detailMsg = error.data.detail || "Failed to add vulnerability. Please check inputs.";
+        setStatusMessage({ type: "error", text: detailMsg });
+      } else {
+        setStatusMessage({
+          type: "error",
+          text: "Something went wrong. Please try again.",
+        });
+      }
     }
   };
 

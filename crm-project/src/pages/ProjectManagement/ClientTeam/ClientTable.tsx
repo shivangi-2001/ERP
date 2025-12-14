@@ -29,7 +29,7 @@ const ClientTeamTable: React.FC = () => {
   const handleDelete = async (id: number|undefined) => {
     if (window.confirm("Are you sure you want to remove this team member?")) {
       try {
-        await deleteTeamMember(id).unwrap();
+        await deleteTeamMember(Number(id)).unwrap();
         navigate(0);
       } catch (error) {
         console.error("Failed to delete team member", error);
@@ -84,7 +84,7 @@ const ClientTeamTable: React.FC = () => {
               <TableRow
                 onClick={() => dispatch(setClientTeam(team))}
                 key={team.id}
-                className={`${(clientteam)&&(team.id === clientteam.id)?"bg-blue-200 hover:bg-blue-100 dark:bg-yellow-900/30":"hover:bg-gray-50"} text-sm  dark:hover:bg-white/[0.03] transition-colors`}
+                className={`${(clientteam)&&(team.id === clientteam.id)?"bg-blue-100 hover:bg-blue-50 dark:bg-yellow-900/30":"hover:bg-gray-50"} text-sm  dark:hover:bg-white/[0.03] transition-colors`}
               >
                 {/* Name & Designation */}
                 <TableCell className="px-5 py-4 sm:px-6 text-start">

@@ -18,10 +18,17 @@ class ClientDetailViewset(ModelViewSet):
     serializer_class = ClientDetailSerializer
     pagination_class = StandardResultsSetPagination
     
+    def get_queryset(self):
+        queryset = ClientDetail.objects.select_related('address').all()
+        name = self.request.query_params.get('name')
+        if name is not None:
+            queryset = queryset.filter(name__icontains=name)
+        return queryset
+    
 class ClientTeamViewset(ModelViewSet):
     queryset = ClientTeam.objects.select_related('client').all()
     serializer_class = ClientTeamSerializer
-    pagination_class = GroupedResultsSetPagination
+    pagination_class = StandardResultsSetPagination
     
     def get_queryset(self):
         queryset = ClientTeam.objects.select_related('client').all()

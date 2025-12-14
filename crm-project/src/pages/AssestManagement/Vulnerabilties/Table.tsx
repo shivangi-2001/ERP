@@ -1,35 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableCell,
-  TableRow,
-} from "../../../components/ui/table";
+import { Table, TableHeader, TableBody, TableCell, TableRow, } from "../../../components/ui/table";
 import Card from "../../../components/common/Card";
 import TableOutlet from "../../../components/common/TableOutlet";
 import Input from "../../../components/form/input/InputField";
 import Select from "../../../components/form/Select";
-import {
-  CheckCircleIcon,
-  CloseIcon,
-  PencilIcon,
-  TrashBinIcon,
-} from "../../../icons";
+import { CheckCircleIcon, CloseIcon, PencilIcon, TrashBinIcon, } from "../../../icons";
 import { RootState } from "../../../app/store";
 import { Vulnerability } from "../../../types/assessment";
-import {
-  setRowsPerPage,
-  setCurrentPage,
-  setVulnerabilityList,
-  setVulnerability,
-} from "../../../features/assessment";
-import {
-  useGetVulnerabilitiesQuery,
-  useDeleteVulnerabilityByIdMutation,
-  useUpdateVulnerabilityByIdMutation,
-} from "../../../service/assessment";
+import { setRowsPerPage, setCurrentPage, setVulnerabilityList, setVulnerability, } from "../../../features/assessment";
+import { useGetVulnerabilitiesQuery, useDeleteVulnerabilityByIdMutation, useUpdateVulnerabilityByIdMutation, } from "../../../service/assessment";
 
 const TableTitle = ["Vulnerability Name", "Categry of testing", "Action"];
 
@@ -154,7 +134,7 @@ const VulnerabilityTable: React.FC = () => {
                     className={`${
                       selected_vulnerability &&
                       selected_vulnerability.id === item.id
-                        ? "bg-blue-200 hover:bg-blue-100 dark:bg-yellow-900/30"
+                        ? "bg-blue-100 hover:bg-blue-50 dark:bg-yellow-900/30"
                         : "hover:bg-gray-50"
                     } text-sm  dark:hover:bg-white/[0.03] transition-colors`}
                   >
@@ -197,7 +177,7 @@ const VulnerabilityTable: React.FC = () => {
                     className={`cursor-pointer ${
                       selected_vulnerability &&
                       selected_vulnerability.id === item.id
-                        ? "bg-blue-200 hover:bg-blue-100 dark:bg-yellow-900/30"
+                        ? "bg-blue-100 hover:bg-blue-50 dark:bg-yellow-900/30"
                         : "hover:bg-gray-50"
                     } text-sm  dark:hover:bg-white/[0.03] transition-colors`}
                   >

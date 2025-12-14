@@ -4,24 +4,18 @@ import CookieConsent from "react-cookie-consent";
 // Authentication
 import SignIn from "./pages/Authentication/SignIn";
 import SignUp from "./pages/Authentication/SignUp";
+
 // Other Pages
 import NotFound from "./pages/OtherPage/NotFound";
-import UserProfiles from "./pages/UserProfiles";
 import Videos from "./pages/UiElements/Videos";
 import Images from "./pages/UiElements/Images";
 import Alerts from "./pages/UiElements/Alerts";
 import Badges from "./pages/UiElements/Badges";
 import Avatars from "./pages/UiElements/Avatars";
 import Buttons from "./pages/UiElements/Buttons";
-import LineChart from "./pages/Charts/LineChart";
-import BarChart from "./pages/Charts/BarChart";
-import Calendar from "./pages/Calendar";
-import BasicTables from "./pages/Tables/BasicTables";
-import FormElements from "./pages/Forms/FormElements";
 import Blank from "./pages/Blank";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
-import Home from "./pages/Dashboard/Home";
 
 import ProtectedRoute from "./layout/ProtectedLayout";
 
@@ -39,9 +33,12 @@ import ComplianceType from "./pages/AssestManagement/ComplianceType";
 // Team Management
 import TeamGroup from "./pages/TeamManagement/teamGroup";
 import EmployeeIndex from "./pages/TeamManagement/employeeIndex";
-import UrlMappingIndex from "./pages/ProjectManagement/UrlMapping/Index";
-import InProgressIndex from "./pages/InProgress/Index";
-import FindingIndex from "./pages/InProgress/FindingIndex";
+import URLIndex from "./pages/PentestManagement/URL/Index";
+import InProgressIndex from "./pages/PentestManagement/InProgress/Index";
+import FindingIndex from "./pages/PentestManagement/Finding/FindingIndex";
+import CompletedIndex from "./pages/PentestManagement/Completed/Index";
+import FindingTable from "./pages/PentestManagement/Finding/FindingTable";
+import FindingForm from "./pages/PentestManagement/Finding/FindingForm";
 
 
 export default function App() {
@@ -71,7 +68,7 @@ export default function App() {
             <Route index path="/on-board" element={<OnBoardIndex />} />
             <Route index path="/clients/:id" element={<ClientIDIndex />}/>
             <Route index path="/manage" element={<ManageIndex />} />
-            <Route index path="/client/:id" element={<UrlMappingIndex/>} />
+            <Route index path="/client/:id" element={<URLIndex/>} />
             
             {/* Assest Management */}
             <Route  path="/asessment-type" element={<AssessmentType />}/>
@@ -80,22 +77,17 @@ export default function App() {
 
             {/* Pentest Management */}
             <Route  path="/in-progress" element={<InProgressIndex />}/>
-            <Route  path="/in-progress/:id" element={<FindingIndex />}/>
+            <Route  path="/in-progress/:id" element={<FindingForm />}/>
+            <Route  path="/in-progress/:id/pocs" element={<FindingTable />}/>
+            <Route  path="/completed-projects" element={<CompletedIndex />}/>
 
             {/* Team Management */}
             <Route  path="/teams" element={<TeamGroup />}/>
             <Route  path="/employee" element={<EmployeeIndex />}/>
             
             {/* Others Page */}
-            <Route path="/profile" element={<UserProfiles />} />
-            <Route path="/calendar" element={<Calendar />} />
             <Route path="/blank" element={<Blank />} />
 
-            {/* Forms */}
-            <Route path="/form-elements" element={<FormElements />} />
-
-            {/* Tables */}
-            <Route path="/basic-tables" element={<BasicTables />} />
 
             {/* Ui Elements */}
             <Route path="/alerts" element={<Alerts />} />
@@ -105,9 +97,6 @@ export default function App() {
             <Route path="/images" element={<Images />} />
             <Route path="/videos" element={<Videos />} />
 
-            {/* Charts */}
-            <Route path="/line-chart" element={<LineChart />} />
-            <Route path="/bar-chart" element={<BarChart />} />
           </Route>
           </Route>
 

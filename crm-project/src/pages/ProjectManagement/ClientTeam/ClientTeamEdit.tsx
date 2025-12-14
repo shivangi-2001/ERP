@@ -6,6 +6,8 @@ import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import Button from "../../../components/ui/button/Button";
 import Alert from "../../../components/ui/alert/Alert";
+import Form from "../../../components/form/Form";
+
 import { getUniquePhoneCodes } from "../../../utils/location";
 import { RootState } from "../../../app/store";
 import { ClientTeam } from "../../../types/project";
@@ -104,11 +106,10 @@ const ClientTeamEdit: React.FC = () => {
 
   return (
     <ComponentCard title={`Edit ${clientteam.name}`}>
-      <form className="space-y-6" onSubmit={handleFormSubmit}>
-        {statusMessage && (
-          <Alert variant={statusMessage.type} title="" message={statusMessage.text} />
-        )}
-
+      {statusMessage && (<div className="mb-4">
+        <Alert variant={statusMessage.type} title={`${formData?.name}`} message={statusMessage.text} />
+      </div> )}
+      <Form className="space-y-6 p-5" onSubmit={handleFormSubmit}>
         <div>
           <Label htmlFor="name">Full Name</Label>
           <Input
@@ -173,7 +174,7 @@ const ClientTeamEdit: React.FC = () => {
             {isLoading ? "Saving..." : "Save Changes"}
           </Button>
         </div>
-      </form>
+      </Form>
     </ComponentCard>
   );
 };

@@ -1,27 +1,17 @@
 import React, { useState } from "react";
 import { Link } from "react-router";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-} from "../../../components/ui/table";
-import Card from "../../../components/common/Card";
-import { PlusIcon } from "../../../icons";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../app/store";
+import { Table, TableBody, TableCell, TableHeader, TableRow, } from "../../../components/ui/table";
+import Card from "../../../components/common/Card";
 import PageMeta from "../../../components/common/PageMeta";
 import Badge from "../../../components/ui/badge/Badge";
-import SelectAssessmentType from "./SelectAssessmentType";
-import { useModal } from "../../../hooks/useModal";
 import { Modal } from "../../../components/ui/modal";
-import {
-  setClientDetail,
-  setCurrentPage,
-  setRowsPerPage,
-} from "../../../features/project";
 import TableOutlet from "../../../components/common/TableOutlet";
+import { RootState } from "../../../app/store";
+import { setClientDetail, setCurrentPage, setRowsPerPage, } from "../../../features/project";
+import { PlusIcon } from "../../../icons";
+import { useModal } from "../../../hooks/useModal";
+import SelectAssessmentType from "./SelectAssessmentType";
 
 const TableTitle = ["Client Name", "", "Action"];
 

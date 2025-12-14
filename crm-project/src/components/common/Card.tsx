@@ -5,6 +5,7 @@ export interface SearchResultItem {
   id?: string | number;
   label: string;
   value?: any;
+  icon?: string;
 }
 
 interface CardProps {
@@ -94,6 +95,7 @@ const Card: React.FC<CardProps> = ({
     setIsDropdownOpen(false); // Close after selection
   };
 
+
   return (
     <div
       className={`h-fit rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] ${className}`}
@@ -156,25 +158,28 @@ const Card: React.FC<CardProps> = ({
               </div>
 
               {/* Dropdown Menu */}
-              {isDropdownOpen && searchResults.length > 0 && (
-                <div className="absolute left-0 right-0 top-full mt-2 z-50 w-full rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
-                  <ul className="max-h-60 overflow-y-auto py-1">
-                    {searchResults.map((item) => (
-                      <li
-                        key={item.id}
-                        onMouseDown={(e) => {
-                            // Prevent input blur before click registers
-                            e.preventDefault(); 
-                            handleSelectItem(item);
-                        }}
-                        className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
-                      >
-                        {item.label}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+              {isDropdownOpen && searchResults.length>0 && (
+        <div className="absolute z-10 w-full rounded-b-lg border-t-0 border border-gray-300 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900 max-h-60 overflow-y-auto">
+          <ul>
+            {searchResults.length > 0 ? (
+              searchResults.map((option) => (
+                <li
+                  key={option.value} // Ensure this is unique
+                  onClick={() => handleSelectItem(option)}
+                  className="cursor-pointer px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 dark:text-white/90 dark:hover:bg-gray-800 flex items-center gap-2"
+                >
+                  {option?.icon && <span>{option.icon}</span>}
+                  {option.label}
+                </li>
+              ))
+            ) : (
+              <li className="px-4 py-2.5 text-sm text-gray-500 dark:text-gray-400">
+                No results found
+              </li>
+            )}
+          </ul>
+        </div>
+      )}
             </div>
           )}
 

@@ -23,3 +23,4 @@ urlpatterns = [
     path('api/client/', include('CLIENT.urls')),
     path('api/pentest/', include('PENTEST.urls'))
 ]
+

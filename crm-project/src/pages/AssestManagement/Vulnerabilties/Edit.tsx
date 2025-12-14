@@ -21,12 +21,8 @@ const EditVulnerability = () => {
   const { isOpen, closeModal, toggleModal } = useModal();
   const dispatch = useDispatch();
   
-  // 1. Get Data from Redux
-  const { selected_vulnerability, assessment_types, isEditing } = useSelector(
-    (state: RootState) => state.assessment
-  );
+  const { selected_vulnerability, assessment_types, isEditing } = useSelector((state: RootState) => state.assessment);
   
-  // 2. Get CVSS Data to sync calculator with form
   const { baseScore, severity } = useSelector((state: RootState) => state.cvss);
 
   const [updateVulnerability, { isLoading }] = useUpdateVulnerabilityByIdMutation();
@@ -47,7 +43,7 @@ const EditVulnerability = () => {
     text: string;
   } | null>(null);
   
-  const [fieldErrors, setFieldErrors] = useState<any>({});
+  const [errors, setErrors] = useState<any>({});
 
   // 3. Populate Form on Load
   useEffect(() => {
@@ -60,10 +56,11 @@ const EditVulnerability = () => {
         reference: selected_vulnerability.reference || "",
         remediations: selected_vulnerability.remediations || "",
         cvss: selected_vulnerability.cvss || "",
-        category_of_testing_id: selected_vulnerability.category_of_testing_id || 0,
+        category_of_testing_id: selected_vulnerability.category_of_testing.id|| 0,
       });
     }
   }, [selected_vulnerability]);
+
 
   // 4. Sync CVSS Calculator result to Form Data
   useEffect(() => {
@@ -77,8 +74,8 @@ const EditVulnerability = () => {
 
   const handleChange = (field: keyof Vulnerability, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    if (fieldErrors[field]) {
-        setFieldErrors((prev: any) => ({ ...prev, [field]: undefined }));
+    if (errors[field]) {
+        setErrors((prev: any) => ({ ...prev, [field]: undefined }));
     }
   };
 
@@ -91,7 +88,8 @@ const EditVulnerability = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatusMessage(null);
-    setFieldErrors({});
+    setErrors({});
+
 
     if (!formData.name || !formData.category_of_testing_id) {
       setStatusMessage({ type: "error", text: "Please fill all required fields." });
@@ -117,7 +115,7 @@ const EditVulnerability = () => {
     } catch (error: any) {
       console.error("Error updating vulnerability:", error);
       if (error?.data) {
-        setFieldErrors(error.data);
+        setErrors(error.data);
         const detailMsg = error.data.detail || "Failed to update vulnerability.";
         setStatusMessage({ type: "error", text: detailMsg });
       } else {
@@ -137,7 +135,7 @@ const EditVulnerability = () => {
         }
     >
       {statusMessage && (
-        <div className="mb-4">
+        <div className="mb-4 p-5">
           <Alert
             variant={statusMessage.type}
             title={statusMessage.type === "success" ? "Success" : "Error"}
@@ -150,8 +148,7 @@ const EditVulnerability = () => {
         <CVSS />
       </Modal>
       
-      <Form onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-2">
+      <Form onSubmit={handleSubmit}  className="space-y-6 p-5">
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -165,8 +162,8 @@ const EditVulnerability = () => {
                 value={formData.name || ""}
                 placeholder="e.g. SQL Injection"
                 disabled={!isEditing}
-                error={!!fieldErrors.name}
-                hint={fieldErrors.name}
+                error={!!errors.name}
+                hint={errors.name}
               />
             </div>
 
@@ -181,8 +178,8 @@ const EditVulnerability = () => {
                         value={formData.cvss || ""}
                         disabled={!isEditing}
                         placeholder="e.g. 9.8 (Critical)"
-                        error={!!fieldErrors.cvss}
-                        hint={fieldErrors.cvss}
+                        error={!!errors.cvss}
+                        hint={errors.cvss}
                     />
                     <span 
                         role="button"
@@ -220,8 +217,8 @@ const EditVulnerability = () => {
               value={formData.description || ""}
               placeholder="Detailed description..."
               disabled={!isEditing}
-              error={!!fieldErrors.description}
-              hint={fieldErrors.description}
+              error={!!errors.description}
+              hint={errors.description}
               rows={4}
             />
           </div>
@@ -234,8 +231,8 @@ const EditVulnerability = () => {
               value={formData.impact || ""}
               placeholder="Business impact..."
               disabled={!isEditing}
-              error={!!fieldErrors.impact}
-              hint={fieldErrors.impact}
+              error={!!errors.impact}
+              hint={errors.impact}
               rows={3}
             />
           </div>
@@ -248,8 +245,8 @@ const EditVulnerability = () => {
               value={formData.remediations || ""}
               placeholder="Steps to fix..."
               disabled={!isEditing}
-              error={!!fieldErrors.remediations}
-              hint={fieldErrors.remediations}
+              error={!!errors.remediations}
+              hint={errors.remediations}
               rows={3}
             />
           </div>
@@ -262,12 +259,11 @@ const EditVulnerability = () => {
               value={formData.reference || ""}
               placeholder="Links to CVEs..."
               disabled={!isEditing}
-              error={!!fieldErrors.reference}
-              hint={fieldErrors.reference}
+              error={!!errors.reference}
+              hint={errors.reference}
               rows={2}
             />
           </div>
-        </div>
 
         {isEditing && (
             <div className="flex flex-row-reverse mt-10 border-t pt-4">

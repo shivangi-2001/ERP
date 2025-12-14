@@ -3,8 +3,8 @@ import PageMeta from "../../../components/common/PageMeta";
 import { Modal } from "../../../components/ui/modal";
 import { useModal } from "../../../hooks/useModal";
 import { PlusIcon } from "../../../icons";
-import ClientForm from "../Client/Form";
-import ClientTable from "../Client/Table";
+import ClientForm from "../Client/ClientForm";
+import ClientTable from "../Client/ClientTable";
 
 const OnBoardIndex = () => {
   const { isOpen, toggleModal } = useModal();

@@ -126,7 +126,7 @@ const AddEmployee = () => {
     <ComponentCard title="Create Employee Account" desc="Add new tester in your company" >
       {/* Alert Banner */}
       {statusMessage && (
-        <div className="mb-6">
+        <div className="mb-6 p-5">
             <Alert 
                 variant={statusMessage.type} 
                 title={statusMessage.type === "success" ? "Success" : "Error"} 
